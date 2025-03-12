@@ -79,6 +79,7 @@ dependencies {
     implementation("androidx.camera:camera-view:1.0.0-alpha30")
     implementation("androidx.camera:camera-extensions:1.0.0-alpha30")
     implementation("com.google.accompanist:accompanist-flowlayout:0.24.13-rc")
+    implementation("com.google.accompanist:accompanist-pager:0.31.3-beta")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
