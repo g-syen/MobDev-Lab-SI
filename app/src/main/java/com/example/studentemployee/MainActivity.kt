@@ -9,20 +9,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.ui.text.style.TextAlign
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.studentemployee.ui.theme.StudentEmployeeTheme
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.background
-import androidx.compose.ui.res.painterResource
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -31,10 +27,6 @@ import androidx.compose.ui.layout.ContentScale
 import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.platform.LocalContext
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,25 +36,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.io.File
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -70,35 +52,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.firebase.Firebase
+import com.example.studentemployee.screen.LeadershipScreen
+import com.example.studentemployee.screen.ProfileLabScreen
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.util.UUID
 
 class MainActivity : ComponentActivity() {
     private lateinit var firestore: FirebaseFirestore
@@ -244,11 +213,11 @@ fun AppNavigation(
         }
 
         composable(Screen.ProfileLab.route) {
-            ProfileLabScreen()
+            ProfileLabScreen(navController = navController)
         }
 
         composable(Screen.Leadership.route) {
-            LeadershipScreen()
+            LeadershipScreen(navController = navController)
         }
 
         composable(Screen.Member.route) {
@@ -424,9 +393,8 @@ fun AppNavigation(
                     }
                 },
                 onClickLeadership = {
-                    navController.navigate(Screen.Leadership.route) {
-                        popUpTo(Screen.HomepageGuest.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Leadership.route)
+                    //{ popUpTo(Screen.HomepageGuest.route) { inclusive = true } }
                 },
                 onClickMember = {
                     navController.navigate(Screen.Member.route) {
@@ -484,19 +452,19 @@ fun MenuScreen(
     Text (text = "Menu Menu")
 }
 
-@Composable
-fun ProfileLabScreen(
+//@Composable
+//fun ProfileLabScreen(
+//
+//) {
+//    Text (text = "Profile lab")
+//}
 
-) {
-    Text (text = "Profile lab")
-}
-
-@Composable
-fun LeadershipScreen(
-
-) {
-    Text (text = "Leadership")
-}
+//@Composable
+//fun LeadershipScreen(
+//
+//) {
+//    Text (text = "Leadership")
+//}
 
 @Composable
 fun MemberScreen(
