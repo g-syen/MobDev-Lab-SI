@@ -61,11 +61,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import com.example.studentemployee.screen.LeadershipScreen
 import com.example.studentemployee.screen.ProfileLabScreen
+import com.example.studentemployee.viewmodel.LeaderViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 
@@ -217,7 +219,8 @@ fun AppNavigation(
         }
 
         composable(Screen.Leadership.route) {
-            LeadershipScreen(navController = navController)
+            val viewModel: LeaderViewModel = viewModel()
+            LeadershipScreen(navController = navController, firestore = firestore, viewModel = viewModel)
         }
 
         composable(Screen.Member.route) {

@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.studentemployee.data.Leader
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -161,19 +162,19 @@ private fun DropDownProfilePreview() {
 }
 
 @Composable
-fun LeadershipCard(modifier: Modifier = Modifier,jabatan:String,nama:String) {
+fun LeadershipCard(modifier: Modifier = Modifier, leader: Leader) {
     RoundedCard {
         Row(verticalAlignment = Alignment.CenterVertically, ) {
             Column(modifier=Modifier.weight(1f)) {
                 Text(
-                    jabatan,
+                    leader.position,
                     fontSize = 14.sp,
                     color = Color(0xffF37619),
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.height(5.dp))
                 Text(
-                    nama,
+                    leader.name,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xff195693)
@@ -192,5 +193,5 @@ fun LeadershipCard(modifier: Modifier = Modifier,jabatan:String,nama:String) {
 @Preview
 @Composable
 private fun LeadershipCardPreview() {
-    LeadershipCard(jabatan = "Kepala Lab", nama = "Riswan Septriayadi Sianturi, S.Si.., MM., M.Sc., Ph.D.")
+    LeadershipCard(leader = Leader(id = "1", name = "Riswan Septriayadi Sianturi, S.Si.., MM., M.Sc., Ph.D.", position = "Kepala Lab"),)
 }
