@@ -65,8 +65,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
-import com.example.studentemployee.screen.LeadershipScreen
-import com.example.studentemployee.screen.ProfileLabScreen
+import com.example.studentemployee.screen.*
 import com.example.studentemployee.viewmodel.LeaderViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
@@ -99,9 +98,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 sealed class Screen(val route: String) {
     object Login : Screen("login")
     object HomepageGuest : Screen("homepageguest")
+    object HomepageMember : Screen("homepagemember")
+    object UploadProfile : Screen("uploadprofile")
+
     object ProfileLab : Screen("profilelab")
     object Leadership : Screen("leadership")
     object Member : Screen("member")
@@ -111,40 +114,16 @@ sealed class Screen(val route: String) {
     object News : Screen("news")
     object Articles : Screen("articles")
     object Journals : Screen("journals")
-    object Konten : Screen("konten")
-    object HomepageAdmin : Screen("homepageadmin")
-    object HomepageMember : Screen("homepagemember")
+    object Content : Screen("content")
     object Profile : Screen("profile")
     object Menu : Screen("menu")
+    object PersonalMember: Screen("personalmember")
+
+    object HomepageAdmin : Screen("homepageadmin")
+    object FacilitiesAdmin : Screen("facilitiesadmin")
+    object AddEditFacility : Screen("addeditfacility")
+
 }
-
-data class Event(
-    val title: String = "",
-    val date: String = "",
-    val time: String = "",
-    val imageUrl: String = "",
-    val link: String = ""
-)
-
-data class Facilities(
-    val title: String = "",
-    val imageUrl: String = "",
-    val link: String = ""
-)
-
-data class News(
-    val title: String = "",
-    val date: String = "",
-    val imageUrl: String = "",
-    val link: String = ""
-)
-
-data class Article(
-    val title: String = "",
-    val authors: String = "",
-    val link: String = ""
-)
-
 
 @Composable
 fun AppNavigation(
@@ -152,6 +131,10 @@ fun AppNavigation(
     firestore: FirebaseFirestore,
     storage: FirebaseStorage
 ) {
+
+
+
+
     val navController = rememberNavController()
 
     var startDestination by remember { mutableStateOf(Screen.HomepageGuest.route) }
@@ -206,12 +189,17 @@ fun AppNavigation(
                                 popUpTo(Screen.Login.route) { inclusive = true }
                             }
                         }
+                },
+                onClickLoginAsGuest = {
+                    navController.navigate(Screen.HomepageGuest.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
                 }
             )
         }
 
-        composable(Screen.Konten.route) {
-            KontenScreen()
+        composable(Screen.Content.route) {
+            ContentScreen()
         }
 
         composable(Screen.ProfileLab.route) {
@@ -235,6 +223,37 @@ fun AppNavigation(
                     navController.navigateUp()
                 }
             )
+        }
+
+        composable(Screen.PersonalMember.route) {
+            PersonalMemberScreen(
+                navController = navController,
+                firestore = firestore,
+                onClickBack = {
+                    navController.navigateUp()
+                },
+                personalId = null
+            )
+        }
+
+        composable("personalmember/{personalId}") { backStackEntry ->
+            val personalId = backStackEntry.arguments?.getString("personalId")
+            personalId?.let {
+                PersonalMemberScreen(
+                    firestore = firestore,
+                    navController = navController,
+                    onClickBack = {
+                        navController.navigateUp()
+                    },
+                    personalId = it
+                )
+            } ?: run {
+                navController.navigateUp()
+            }
+        }
+
+        composable(Screen.UploadProfile.route) {
+            UploadProfileScreen()
         }
 
         composable(Screen.Statistics.route) {
@@ -275,51 +294,63 @@ fun AppNavigation(
                     }
                 },
                 onClickProfile = {
-                    navController.navigate(Screen.ProfileLab.route) {
-                        popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.ProfileLab.route)
                 },
                 onClickLeadership = {
-                    navController.navigate(Screen.Leadership.route) {
-                        popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Leadership.route)
                 },
                 onClickMember = {
-                    navController.navigate(Screen.Member.route) {
-                        popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Member.route)
                 },
-                onClickFacilities = {
-                    navController.navigate(Screen.Facilities.route) {
-                        popUpTo(Screen.HomepageAdmin.route) { inclusive = false }
-                    }
+                onClickFacilitiesAdmin = {
+                    navController.navigate(Screen.FacilitiesAdmin.route)
                 },
                 onClickStatistics = {
-                    navController.navigate(Screen.Statistics.route) {
-                        popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Statistics.route)
                 },
                 onClickEvents = {
-                    navController.navigate(Screen.Events.route) {
-                        popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Events.route)
                 },
                 onClickNews = {
-                    navController.navigate(Screen.News.route) {
-                        popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.News.route)
                 },
                 onClickArticles = {
-                    navController.navigate(Screen.Articles.route) {
-                        popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Articles.route)
                 },
                 onClickJournals = {
-                    navController.navigate(Screen.Journals.route) {
-                        popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Journals.route)
                 },
                 navController = navController
+            )
+        }
+
+        composable(Screen.FacilitiesAdmin.route) {
+            FacilitiesAdminScreen(
+                navController = navController,
+                firestore = firestore,
+                onClickAdd = {
+                    navController.navigate(Screen.AddEditFacility.route)
+                },
+                onClickBack = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable(Screen.AddEditFacility.route) {
+            AddEditFacilityScreen(
+                firestore = firestore,
+                navController = navController,
+                facilityId = null
+            )
+        }
+
+        composable("addeditfacility/{facilityId}") { backStackEntry ->
+            val facilityId = backStackEntry.arguments?.getString("facilityId")
+            AddEditFacilityScreen(
+                firestore = firestore,
+                navController = navController,
+                facilityId = facilityId
             )
         }
 
@@ -333,49 +364,31 @@ fun AppNavigation(
                     }
                 },
                 onClickProfile = {
-                    navController.navigate(Screen.ProfileLab.route) {
-                        popUpTo(Screen.HomepageMember.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.ProfileLab.route)
                 },
                 onClickLeadership = {
-                    navController.navigate(Screen.Leadership.route) {
-                        popUpTo(Screen.HomepageMember.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Leadership.route)
                 },
                 onClickMember = {
-                    navController.navigate(Screen.Member.route) {
-                        popUpTo(Screen.HomepageMember.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Member.route)
                 },
                 onClickFacilities = {
-                    navController.navigate(Screen.Facilities.route) {
-                        popUpTo(Screen.HomepageMember.route) { inclusive = false }
-                    }
+                    navController.navigate(Screen.Facilities.route)
                 },
                 onClickStatistics = {
-                    navController.navigate(Screen.Statistics.route) {
-                        popUpTo(Screen.HomepageMember.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Statistics.route)
                 },
                 onClickEvents = {
-                    navController.navigate(Screen.Events.route) {
-                        popUpTo(Screen.HomepageMember.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Events.route)
                 },
                 onClickNews = {
-                    navController.navigate(Screen.News.route) {
-                        popUpTo(Screen.HomepageMember.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.News.route)
                 },
                 onClickArticles = {
-                    navController.navigate(Screen.Articles.route) {
-                        popUpTo(Screen.HomepageMember.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Articles.route)
                 },
                 onClickJournals = {
-                    navController.navigate(Screen.Journals.route) {
-                        popUpTo(Screen.HomepageMember.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Journals.route)
                 },
                 navController = navController
             )
@@ -391,48 +404,31 @@ fun AppNavigation(
                     }
                 },
                 onClickProfile = {
-                    navController.navigate(Screen.ProfileLab.route) {
-                        popUpTo(Screen.HomepageGuest.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.ProfileLab.route)
                 },
                 onClickLeadership = {
                     navController.navigate(Screen.Leadership.route)
-                    //{ popUpTo(Screen.HomepageGuest.route) { inclusive = true } }
                 },
                 onClickMember = {
-                    navController.navigate(Screen.Member.route) {
-                        popUpTo(Screen.HomepageGuest.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Member.route)
                 },
                 onClickFacilities = {
-                    navController.navigate(Screen.Facilities.route) {
-                        popUpTo(Screen.HomepageGuest.route) { inclusive = false }
-                    }
+                    navController.navigate(Screen.Facilities.route)
                 },
                 onClickStatistics = {
-                    navController.navigate(Screen.Statistics.route) {
-                        popUpTo(Screen.HomepageGuest.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Statistics.route)
                 },
                 onClickEvents = {
-                    navController.navigate(Screen.Events.route) {
-                        popUpTo(Screen.HomepageGuest.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Events.route)
                 },
                 onClickNews = {
-                    navController.navigate(Screen.News.route) {
-                        popUpTo(Screen.HomepageGuest.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.News.route)
                 },
                 onClickArticles = {
-                    navController.navigate(Screen.Articles.route) {
-                        popUpTo(Screen.HomepageGuest.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Articles.route)
                 },
                 onClickJournals = {
-                    navController.navigate(Screen.Journals.route) {
-                        popUpTo(Screen.HomepageGuest.route) { inclusive = true }
-                    }
+                    navController.navigate(Screen.Journals.route)
                 },
                 navController = navController
             )
@@ -455,19 +451,6 @@ fun MenuScreen(
     Text (text = "Menu Menu")
 }
 
-//@Composable
-//fun ProfileLabScreen(
-//
-//) {
-//    Text (text = "Profile lab")
-//}
-
-//@Composable
-//fun LeadershipScreen(
-//
-//) {
-//    Text (text = "Leadership")
-//}
 
 @Composable
 fun MemberScreen(
@@ -476,72 +459,7 @@ fun MemberScreen(
     Text (text = "Member")
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun FacilitiesScreen(
-    firestore: FirebaseFirestore,
-    navController: NavController,
-    onClickBack: () -> Unit
-) {
-    var facilities by remember { mutableStateOf<List<Facilities>>(emptyList()) }
 
-    LaunchedEffect(Unit) {
-        firestore.collection("facilities")
-            .get()
-            .addOnSuccessListener { result ->
-                facilities = result.documents.mapNotNull { it.toObject(Facilities::class.java) }
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Error getting documents", it)
-            }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Fasilitas Lab SI") },
-                navigationIcon = {
-                    IconButton(onClick = { onClickBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF195693).copy(alpha = 0.8f),
-                    scrolledContainerColor = Color(0xFF195693).copy(alpha = 0.9f) // Optional
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .zIndex(1f) // Ensure it appears above content
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment =  Alignment.Start
-        ) {
-            // Full-width Image Carousel without padding
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp) // Adjust height as needed
-            ) {
-                ImageCarousel(facilities)
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            LazyColumn{
-                items(facilities) { facility ->
-                    FacilitiesCard(facility)
-                }
-            }
-        }
-    }
-
-}
 
 @Composable
 fun StatisticsScreen(
@@ -579,1247 +497,24 @@ fun JournalsScreen(
 }
 
 @Composable
-fun KontenScreen(
+fun ContentScreen(
 
 ) {
-    Text (text = "Konten")
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomepageAdminScreen(
-    firestore: FirebaseFirestore,
-    onClickLogin: () -> Unit,
-    onClickProfile: () -> Unit,
-    onClickLeadership: () -> Unit,
-    onClickMember: () -> Unit,
-    onClickFacilities: () -> Unit,
-    onClickStatistics: () -> Unit,
-    onClickEvents: () -> Unit,
-    onClickNews: () -> Unit,
-    onClickArticles: () -> Unit,
-    onClickJournals: () -> Unit,
-    navController: NavController
-) {
-
-    var events by remember { mutableStateOf<List<Event>>(emptyList()) }
-    var news by remember { mutableStateOf<List<News>>(emptyList()) }
-    var articles by remember { mutableStateOf<List<Article>>(emptyList()) }
-    var journals by remember { mutableStateOf<List<Article>>(emptyList()) }
-    val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    val email = currentUser?.email
-
-    LaunchedEffect(Unit) {
-        firestore.collection("events")
-            .get()
-            .addOnSuccessListener { result ->
-                events = result.documents.mapNotNull { it.toObject(Event::class.java)}
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Error getting documents", it)
-            }
-        firestore.collection("news")
-            .get()
-            .addOnSuccessListener { result ->
-                news = result.documents.mapNotNull { it.toObject(News::class.java)}
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Error getting documents", it)
-            }
-        firestore.collection("articles")
-            .get()
-            .addOnSuccessListener { result ->
-                articles = result.documents.mapNotNull { it.toObject(Article::class.java)}
-            }
-            .addOnFailureListener{
-                Log.e("Firestore", "Error getting documents", it)
-            }
-        firestore.collection("journals")
-            .get()
-            .addOnSuccessListener { result ->
-                journals = result.documents.mapNotNull { it.toObject(Article::class.java)}
-            }
-            .addOnFailureListener{
-                Log.e("Firestore", "Error getting documents", it)
-            }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Row(modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        IconButton(
-                            onClick = { onClickLogin() },
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color.White)
-                                .width(56.dp)
-                                .height(36.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Logout,
-                                contentDescription = "Login",
-                                tint = Color(0xFF195693)
-                            )
-                        }
-                        Column (
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.weight(1f)
-                        ){
-                            Text(
-                                text = "Selamat Datang",
-                                color = Color(0xFFF37619),
-                                style = MaterialTheme.typography.titleSmall
-                            )
-
-                            Row (
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Text (
-                                    text = "Admin Lab SI",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = Color.Red
-                                )
-                            }
-                        }
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF195693)
-                )
-            )
-        },
-        bottomBar = { BottomNavBarMember(navController) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(16.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment =  Alignment.Start
-        ){
-            Box (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFF195693))
-                    .padding(20.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                ) {
-                    FeatureItem(Icons.Default.Book, "Profil Lab", onClickProfile)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.SupervisorAccount, "Pimpinan", onClickLeadership)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.Groups2, "Anggota", onClickMember)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.HomeRepairService, "Fasilitas", onClickFacilities)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.BarChart, "Statistik", onClickStatistics)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Event saat ini",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickEvents() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(events) { event ->
-                    EventCard(event)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Berita seputar Lab",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickNews() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(news) { news ->
-                    NewsCard(news)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Artikel",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickArticles() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(articles) { articles ->
-                    ArticleCard(articles)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Jurnal",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickJournals() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(journals) { journals ->
-                    ArticleCard(journals)
-                }
-            }
-        }
-
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomepageMemberScreen(
-    firestore: FirebaseFirestore,
-    onClickLogin: () -> Unit,
-    onClickProfile: () -> Unit,
-    onClickLeadership: () -> Unit,
-    onClickMember: () -> Unit,
-    onClickFacilities: () -> Unit,
-    onClickStatistics: () -> Unit,
-    onClickEvents: () -> Unit,
-    onClickNews: () -> Unit,
-    onClickArticles: () -> Unit,
-    onClickJournals: () -> Unit,
-    navController: NavController
-) {
-    var events by remember { mutableStateOf<List<Event>>(emptyList()) }
-    var news by remember { mutableStateOf<List<News>>(emptyList()) }
-    var articles by remember { mutableStateOf<List<Article>>(emptyList()) }
-    var journals by remember { mutableStateOf<List<Article>>(emptyList()) }
-    val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    val email = currentUser?.email
-
-    LaunchedEffect(Unit) {
-        firestore.collection("events")
-            .get()
-            .addOnSuccessListener { result ->
-                events = result.documents.mapNotNull { it.toObject(Event::class.java)}
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Error getting documents", it)
-            }
-        firestore.collection("news")
-            .get()
-            .addOnSuccessListener { result ->
-                news = result.documents.mapNotNull { it.toObject(News::class.java)}
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Error getting documents", it)
-            }
-        firestore.collection("articles")
-            .get()
-            .addOnSuccessListener { result ->
-                articles = result.documents.mapNotNull { it.toObject(Article::class.java)}
-            }
-            .addOnFailureListener{
-                Log.e("Firestore", "Error getting documents", it)
-            }
-        firestore.collection("journals")
-            .get()
-            .addOnSuccessListener { result ->
-                journals = result.documents.mapNotNull { it.toObject(Article::class.java)}
-            }
-            .addOnFailureListener{
-                Log.e("Firestore", "Error getting documents", it)
-            }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Row(modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        IconButton(
-                            onClick = { onClickLogin() },
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color.White)
-                                .width(56.dp)
-                                .height(36.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Logout,
-                                contentDescription = "Login",
-                                tint = Color(0xFF195693)
-                            )
-                        }
-                        Column (
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.weight(1f)
-                        ){
-                            Text(
-                                text = "Selamat Datang",
-                                color = Color(0xFFF37619),
-                                style = MaterialTheme.typography.titleSmall
-                            )
-
-                            Row (
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Text (
-                                    text = "$email",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = Color.White
-                                )
-                            }
-                        }
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF195693)
-                )
-            )
-        },
-        bottomBar = { BottomNavBarMember(navController) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(16.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment =  Alignment.Start
-        ){
-            Box (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFF195693))
-                    .padding(20.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                ) {
-                    FeatureItem(Icons.Default.Book, "Profil Lab", onClickProfile)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.SupervisorAccount, "Pimpinan", onClickLeadership)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.Groups2, "Anggota", onClickMember)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.HomeRepairService, "Fasilitas", onClickFacilities)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.BarChart, "Statistik", onClickStatistics)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Event saat ini",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickEvents() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(events) { event ->
-                    EventCard(event)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Berita seputar Lab",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickNews() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(news) { news ->
-                    NewsCard(news)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Artikel",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickArticles() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(articles) { articles ->
-                    ArticleCard(articles)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Jurnal",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickJournals() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(journals) { journals ->
-                    ArticleCard(journals)
-                }
-            }
-        }
-
-    }
-}
-
-@Composable
-fun LoginScreen(
-    onLoginSuccess: (FirebaseUser) -> Unit
-) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isPasswordVisible by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-    var isLoading by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
-    Column (
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center
-    ) {
-        TextField(
-            value = email,
-            onValueChange = {
-                email = it
-                errorMessage = null
-            },
-            label = {Text("Email")},
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextField(
-            value = password,
-            onValueChange = {
-                password = it
-                errorMessage = null
-            },
-            label = {Text("Password")},
-            visualTransformation = if (isPasswordVisible) VisualTransformation.None else
-                PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                    Icon(
-                        imageVector = if (isPasswordVisible) Icons.Outlined.VisibilityOff else
-                            Icons.Outlined.Visibility,
-                        contentDescription = if (isPasswordVisible) "Hide password" else "Show password"
-                    )
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = {
-                if(email.isBlank() || password.isBlank()){
-                    errorMessage = "Please enter email and password"
-                    return@Button
-                }
-                isLoading = true
-                errorMessage = null
-                coroutineScope.launch {
-                    try {
-                        val authResult = withContext(Dispatchers.IO) {
-                            FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password).await()
-                        }
-                        isLoading = false
-                        authResult.user?.let { onLoginSuccess(it) }
-                    } catch (e: Exception) {
-                        isLoading = false
-                        errorMessage = "Login failed: ${e.localizedMessage}"
-                    }
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !isLoading
-        ) {
-            if(isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    color = Color.White
-                )
-            } else {
-                Text("Login")
-            }
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        errorMessage?.let {
-            Text(
-                text = it,
-                color = Color.Red,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomepageGuestScreen(
-    firestore: FirebaseFirestore,
-    onClickLogin: () -> Unit,
-    onClickProfile: () -> Unit,
-    onClickLeadership: () -> Unit,
-    onClickMember: () -> Unit,
-    onClickFacilities: () -> Unit,
-    onClickStatistics: () -> Unit,
-    onClickEvents: () -> Unit,
-    onClickNews: () -> Unit,
-    onClickArticles: () -> Unit,
-    onClickJournals: () -> Unit,
-    navController: NavController
-) {
-    var events by remember { mutableStateOf<List<Event>>(emptyList()) }
-    var news by remember { mutableStateOf<List<News>>(emptyList()) }
-    var articles by remember { mutableStateOf<List<Article>>(emptyList()) }
-    var journals by remember { mutableStateOf<List<Article>>(emptyList()) }
-
-    LaunchedEffect(Unit) {
-        firestore.collection("events")
-            .get()
-            .addOnSuccessListener { result ->
-                events = result.documents.mapNotNull { it.toObject(Event::class.java)}
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Error getting documents", it)
-            }
-        firestore.collection("news")
-            .get()
-            .addOnSuccessListener { result ->
-                news = result.documents.mapNotNull { it.toObject(News::class.java)}
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Error getting documents", it)
-            }
-        firestore.collection("articles")
-            .get()
-            .addOnSuccessListener { result ->
-                articles = result.documents.mapNotNull { it.toObject(Article::class.java)}
-            }
-            .addOnFailureListener{
-                Log.e("Firestore", "Error getting documents", it)
-            }
-        firestore.collection("journals")
-            .get()
-            .addOnSuccessListener { result ->
-                journals = result.documents.mapNotNull { it.toObject(Article::class.java)}
-            }
-            .addOnFailureListener{
-                Log.e("Firestore", "Error getting documents", it)
-            }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Row(modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        IconButton(
-                            onClick = { onClickLogin() },
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color.White)
-                                .width(56.dp)
-                                .height(36.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Login,
-                                contentDescription = "Login",
-                                tint = Color(0xFF195693)
-                            )
-                        }
-                        Column (
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.weight(1f)
-                        ){
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Halo, Pengunjung",
-                                color = Color.White,
-                                style = MaterialTheme.typography.titleSmall
-                            )
-
-                            Row (
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                TextButton(onClick = { onClickLogin()},
-                                    contentPadding = PaddingValues(0.dp)
-                                ) {
-                                    Text(
-                                        text = "Masuk",
-                                        style = MaterialTheme.typography.titleSmall,
-                                        modifier = Modifier.padding(0.dp)
-                                    )
-                                }
-                                Text (
-                                    text = "untuk menggunakan menu lain",
-                                    style = MaterialTheme.typography.titleSmall,
-                                    color = Color.White
-                                )
-                            }
-                        }
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF195693)
-                )
-            )
-        },
-        bottomBar = { BottomNavBar(navController) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(16.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment =  Alignment.Start
-        ){
-            Box (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFF195693))
-                    .padding(20.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                ) {
-                    FeatureItem(Icons.Default.Book, "Profil Lab", onClickProfile)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.SupervisorAccount, "Pimpinan", onClickLeadership)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.Groups2, "Anggota", onClickMember)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.HomeRepairService, "Fasilitas", onClickFacilities)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.BarChart, "Statistik", onClickStatistics)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Event saat ini",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickEvents() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(events) { event ->
-                    EventCard(event)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Berita seputar Lab",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickNews() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(news) { news ->
-                    NewsCard(news)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Artikel",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickArticles() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(articles) { articles ->
-                    ArticleCard(articles)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text (
-                    style = MaterialTheme.typography.titleMedium,
-                    text = "Jurnal",
-                    color = Color(0xFFf37619)
-                )
-
-                Button(
-                    onClick = { onClickJournals() },
-                    modifier = Modifier
-                        .size(width = 120.dp, height = 32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
-                ){
-                    Text(
-                        text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            LazyRow {
-                items(journals) { journals ->
-                    ArticleCard(journals)
-                }
-            }
-        }
-
-    }
-}
-
-@Composable
-fun FeatureItem(
-    icon: ImageVector,
-    title: String,
-    onClickButton : () -> Unit
-) {
-    Card(
-        modifier = Modifier.size(54.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF048dc8)),
-        onClick = { onClickButton() }
-    ){
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            Icon(imageVector = icon, contentDescription = title, tint = Color.White)
-            Text(text = title, color = Color.White, style = MaterialTheme.typography.labelSmall)
-        }
-    }
-}
-
-@Composable
-fun EventCard(
-    event: Event
-){
-    val context = LocalContext.current
-    ElevatedCard(
-        modifier = Modifier
-            .width(180.dp)
-            .height(220.dp)
-            .padding(8.dp)
-            .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.link))
-                context.startActivity(intent)
-            },
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
-    ) {
-        Column {
-            AsyncImage(
-                model = event.imageUrl,
-                contentDescription = "Event Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp), // Image size
-                contentScale = ContentScale.Crop
-            )
-
-            Column(modifier = Modifier.padding(8.dp)) {
-                Text(text = event.title, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = event.date, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
-                Text(text = event.time, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
-            }
-        }
-    }
-}
-
-@Composable
-fun NewsCard(
-    news: News
-){
-    val context = LocalContext.current
-    ElevatedCard(
-        modifier = Modifier
-            .width(180.dp)
-            .height(200.dp)
-            .padding(8.dp)
-            .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(news.link))
-                context.startActivity(intent)
-            },
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
-    ) {
-        Column {
-            AsyncImage(
-                model = news.imageUrl,
-                contentDescription = "News Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp), // Image size
-                contentScale = ContentScale.Crop
-            )
-
-            Column(modifier = Modifier.padding(8.dp)) {
-                Text(text = news.title, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = news.date, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
-            }
-        }
-    }
-}
-
-@Composable
-fun ArticleCard(
-    article: Article
-){
-    val context = LocalContext.current
-    ElevatedCard(
-        modifier = Modifier
-            .width(250.dp)
-            .padding(8.dp)
-            .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(article.link))
-                context.startActivity(intent)
-            },
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Text(
-                text = article.title,
-                fontWeight = FontWeight.Bold,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = article.authors,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    }
-}
-
-@Composable
-fun FacilitiesCard(
-    facilities: Facilities
-){
-    val context = LocalContext.current
-    ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(facilities.link))
-                context.startActivity(intent)
-            },
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-        colors = CardColors(
-            containerColor = Color.White,
-            contentColor = Color.White,
-            disabledContainerColor = Color.Gray,
-            disabledContentColor = Color.LightGray
-        )
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AsyncImage(
-                model = facilities.imageUrl,
-                contentDescription = "Facility Image",
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(100.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = facilities.title,
-                style = MaterialTheme.typography.titleSmall,
-                color = Color(0xFF195693),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    }
-}
-
-@Composable
-fun ImageCarousel(images: List<Facilities>) {
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { images.size }
-    )
-    val context = LocalContext.current
-
-    HorizontalPager(
-        state = pagerState,
-        modifier = Modifier.fillMaxWidth()
-    ) { page ->
-        val facility = images[page]
-
-        AsyncImage(
-            model = facility.imageUrl,
-            contentDescription = "Carousel Image",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .clickable {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(facility.link))
-                    context.startActivity(intent)
-                },
-            contentScale = ContentScale.Crop,
-
-        )
-    }
+    Text (text = "Content")
 }
 
 
-data class BottomNavItem(val label: String, val icon: ImageVector, val route: String)
 
-@Composable
-fun BottomNavBar(navController: NavController) {
-    val items = listOf(
-        BottomNavItem("Home", Icons.Default.Home, "homepageguest"),
-        BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "konten")
-    )
 
-    NavigationBar(containerColor = Color(0xFF195693)) {
-        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-        items.forEach { item ->
-            NavigationBarItem(
-                icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
-                label = { Text(item.label) },
-                selected = currentRoute == item.route,
-                onClick = { navController.navigate(item.route) }
-            )
-        }
-    }
-}
 
-@Composable
-fun BottomNavBarMember(navController: NavController) {
-    val items = listOf(
-        BottomNavItem("Home", Icons.Default.Home, "homepagemember"),
-        BottomNavItem("Menu", Icons.Default.Widgets, "menu"),
-        BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "konten"),
-        BottomNavItem("Profil", Icons.Outlined.AccountBox, "profile")
-    )
 
-    NavigationBar(containerColor = Color(0xFF195693)) {
-        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-        items.forEach { item ->
-            NavigationBarItem(
-                icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
-                label = { Text(item.label) },
-                selected = currentRoute == item.route,
-                onClick = { navController.navigate(item.route) }
-            )
-        }
-    }
-}
+
+
+
+
+
+
+
+
+
+
