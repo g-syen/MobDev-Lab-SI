@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.studentemployee.Facilities
 import com.example.studentemployee.components.LeadershipCard
 import com.example.studentemployee.components.TopAppBarMenu
 import com.example.studentemployee.data.Leader
@@ -51,7 +50,7 @@ fun LeadershipScreen(
 
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            ListPimpinan(leaderList = leaderList)
+            ListPimpinan(leaderList = leaderList, navController = navController)
         }
     }
 }
@@ -63,10 +62,10 @@ private fun LeadershipScreenPreview() {
 }
 
 @Composable
-fun ListPimpinan(modifier: Modifier = Modifier, leaderList: List<Leader>) {
+fun ListPimpinan(modifier: Modifier = Modifier, leaderList: List<Leader>, navController : NavController) {
     Column( verticalArrangement = Arrangement.spacedBy(10.dp)) {
         leaderList.forEach { leader ->
-            LeadershipCard(leader = leader)
+            LeadershipCard(leader = leader, navController = navController)
         }
     }
 }
@@ -80,5 +79,5 @@ private fun ListPimpinanPreview() {
         Leader(id = "3", name = "Dewi Kartika, S.Kom., M.Sc.", position = "Kepala Divisi Sistem Informasi"),
         Leader(id = "4", name = "Andi Nugraha, S.T., M.T.", position = "Kepala Divisi Keamanan Siber")
     )
-    ListPimpinan(leaderList = leaderList)
+    ListPimpinan(leaderList = leaderList, navController = rememberNavController())
 }
