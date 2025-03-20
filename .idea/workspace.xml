@@ -10,25 +10,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="effd71fe-21d3-44fd-bde7-629c76d267d9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/data/Article.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/data/BottomNavItem.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/data/Devotion.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/data/Event.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/data/Facilities.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/data/News.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/AddEditFacilityScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/FacilitiesAdminScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/FacilitiesScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/HomepageAdminScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/HomepageGuestScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/HomepageMemberScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/LoginScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/PersonalMemberScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/UploadProfileScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/components/Cards.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/components/Cards.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/AddEditFacilityScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/AddEditFacilityScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/FacilitiesAdminScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/FacilitiesAdminScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/FacilitiesScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/FacilitiesScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/HomepageAdminScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/HomepageAdminScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/HomepageGuestScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/HomepageGuestScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/HomepageMemberScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/HomepageMemberScreen.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/LeadershipScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/LeadershipScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/LoginScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/LoginScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/PersonalMemberScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/PersonalMemberScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/ProfileLabScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/screen/ProfileLabScreen.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -39,6 +39,7 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material3.Button
@@ -50,7 +51,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -362,10 +365,11 @@ fun FacilitiesAdminCard(
 fun BottomNavBar(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, "homepageguest"),
-        BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "konten")
+        BottomNavItem("Search", Icons.Default.Search, "search"),
+        BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "content")
     )
 
-    NavigationBar(containerColor = Color(0xFF195693)) {
+    NavigationBar(containerColor = Color(0xFF19253F)) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         items.forEach { item ->
             NavigationBarItem(
@@ -377,7 +381,14 @@ fun BottomNavBar(navController: NavController) {
                 },
                 label = { androidx.compose.material3.Text(item.label) },
                 selected = currentRoute == item.route,
-                onClick = { navController.navigate(item.route) }
+                onClick = { navController.navigate(item.route) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color.White,
+                    unselectedIconColor = Color.White,
+                    selectedTextColor = Color.White,
+                    unselectedTextColor = Color.White,
+                    indicatorColor = Color(0xFF394E89)
+                )
             )
         }
     }
@@ -388,18 +399,56 @@ fun BottomNavBarMember(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, "homepagemember"),
         BottomNavItem("Menu", Icons.Default.Widgets, "menu"),
-        BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "konten"),
+        BottomNavItem("Search", Icons.Default.Search, "search"),
+        BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "content"),
         BottomNavItem("Profil", Icons.Outlined.AccountBox, "profile")
     )
 
-    NavigationBar(containerColor = Color(0xFF195693)) {
+    NavigationBar(containerColor = Color(0xFF19253F)) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         items.forEach { item ->
             NavigationBarItem(
                 icon = { androidx.compose.material3.Icon(imageVector = item.icon, contentDescription = item.label) },
                 label = { androidx.compose.material3.Text(item.label) },
                 selected = currentRoute == item.route,
-                onClick = { navController.navigate(item.route) }
+                onClick = { navController.navigate(item.route) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color.White,
+                    unselectedIconColor = Color.White,
+                    selectedTextColor = Color.White,
+                    unselectedTextColor = Color.White,
+                    indicatorColor = Color(0xFF394E89)
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomNavBarAdmin(navController: NavController) {
+    val items = listOf(
+        BottomNavItem("Home", Icons.Default.Home, "homepageadmin"),
+        BottomNavItem("Menu", Icons.Default.Widgets, "menu"),
+        BottomNavItem("Search", Icons.Default.Search, "search"),
+        BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "content"),
+        BottomNavItem("Profil", Icons.Outlined.AccountBox, "profile")
+    )
+
+    NavigationBar(containerColor = Color(0xFF19253F)) {
+        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+        items.forEach { item ->
+            NavigationBarItem(
+                icon = { androidx.compose.material3.Icon(imageVector = item.icon, contentDescription = item.label) },
+                label = { androidx.compose.material3.Text(item.label) },
+                selected = currentRoute == item.route,
+                onClick = { navController.navigate(item.route) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color.White,
+                    unselectedIconColor = Color.White,
+                    selectedTextColor = Color.White,
+                    unselectedTextColor = Color.White,
+                    indicatorColor = Color(0xFF394E89)
+                )
             )
         }
     }
@@ -453,7 +502,8 @@ fun EventCard(
                 context.startActivity(intent)
             },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(Color.White)
     ) {
         Column {
             AsyncImage(
@@ -503,7 +553,8 @@ fun NewsCard(
                 context.startActivity(intent)
             },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(Color.White)
     ) {
         Column {
             AsyncImage(
@@ -547,7 +598,8 @@ fun ArticleCard(
                 context.startActivity(intent)
             },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(Color.White)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             androidx.compose.material3.Text(
@@ -582,7 +634,8 @@ fun DevotionCard(
                 context.startActivity(intent)
             },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(Color.White)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             androidx.compose.material3.Text(
@@ -663,7 +716,7 @@ fun TabSection(selectedTab: String, onTabSelected: (String) -> Unit) {
                     Button(
                         onClick = { onTabSelected(tab) },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selectedTab == tab) Color(0xFFFF6A00) else Color(0xFF007EC6)
+                            containerColor = if (selectedTab == tab) Color(0xFFFF6A00) else Color(0xFF426193)
                         ),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier
@@ -694,7 +747,9 @@ fun ArtikelContent(articles: List<Article>) {
         } else {
             LazyColumn {
                 items(articles) { articles ->
-                    ArticleCard(articles, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+                    ArticleCard(articles, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp))
                 }
             }
         }
@@ -712,7 +767,9 @@ fun PublikasiContent(publications: List<Article>) {
         } else {
             LazyColumn {
                 items(publications) { publications ->
-                    ArticleCard(publications, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+                    ArticleCard(publications, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp))
                 }
             }
         }
@@ -730,7 +787,9 @@ fun PengabdianContent(devotions: List<Devotion>) {
         } else {
             LazyColumn {
                 items(devotions) { devotions ->
-                    DevotionCard(devotions, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+                    DevotionCard(devotions, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp))
                 }
             }
         }

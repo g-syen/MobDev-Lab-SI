@@ -71,9 +71,9 @@ fun AddEditFacilityScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        TextField(value = title, onValueChange = { title = it }, label = { Text("Title") })
-        TextField(value = imageUrl, onValueChange = { imageUrl = it }, label = { Text("Image URL") })
-        TextField(value = link, onValueChange = { link = it }, label = { Text("Link") })
+        TextField(value = title, onValueChange = { title = it }, label = { Text(facility?.title ?: "") })
+        TextField(value = imageUrl, onValueChange = { imageUrl = it }, label = { Text(facility?.imageUrl ?: "") })
+        TextField(value = link, onValueChange = { link = it }, label = { Text(facility?.link ?: "") })
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = { saveFacility() }) {
             Text("Save")

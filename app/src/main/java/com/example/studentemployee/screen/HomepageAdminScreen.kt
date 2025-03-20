@@ -19,24 +19,18 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Groups2
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.HomeRepairService
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.SupervisorAccount
-import androidx.compose.material.icons.filled.Widgets
-import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -53,16 +47,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.studentemployee.data.Article
 import com.example.studentemployee.components.ArticleCard
+import com.example.studentemployee.components.BottomNavBarAdmin
 import com.example.studentemployee.data.Event
 import com.example.studentemployee.components.EventCard
 import com.example.studentemployee.components.FeatureItem
 import com.example.studentemployee.data.News
 import com.example.studentemployee.components.NewsCard
-import com.example.studentemployee.components.BottomNavBarMember
-import com.example.studentemployee.data.BottomNavItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -145,8 +137,8 @@ fun HomepageAdminScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Logout,
-                                contentDescription = "Login",
-                                tint = Color(0xFF195693)
+                                contentDescription = "Logout",
+                                tint = Color(0xFF19253F)
                             )
                         }
                         Column (
@@ -172,27 +164,29 @@ fun HomepageAdminScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF195693)
+                    containerColor = Color(0xFF19253F)
                 )
             )
         },
-        bottomBar = { BottomNavBarMember(navController) }
+        bottomBar = { BottomNavBarAdmin(navController) },
+        containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
         Column(
             modifier = Modifier
+                .padding(horizontal = 16.dp)
                 .padding(innerPadding)
-                .padding(16.dp)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment =  Alignment.Start
         ){
+            Spacer(modifier = Modifier.height(16.dp))
             Box (
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFF195693))
+                    .background(Color(0xFF10375E))
                     .padding(20.dp)
             ) {
                 Row(
@@ -231,7 +225,7 @@ fun HomepageAdminScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",
@@ -268,7 +262,7 @@ fun HomepageAdminScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",
@@ -305,7 +299,7 @@ fun HomepageAdminScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",
@@ -342,7 +336,7 @@ fun HomepageAdminScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",

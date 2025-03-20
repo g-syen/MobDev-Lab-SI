@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,31 +24,53 @@ import com.example.studentemployee.components.DropDownProfile
 import com.example.studentemployee.components.RoundedCard
 import com.example.studentemployee.components.SectionHeader
 import com.example.studentemployee.components.TopAppBarMenu
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileLabScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    Scaffold(topBar = {
-        TopAppBarMenu(
-            onClick = { navController.navigateUp() },
-            text = "Profil Lab Sistem Informasi"
-        )
-    }) { innerPadding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("Profil Lab Sistem Informasi", color = Color.White)
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF19253F)
+                )
+            )
+        },
+        containerColor = Color(0xFFF9F9F9)
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(24.dp)
+                .padding(horizontal = 24.dp)
                 .verticalScroll(rememberScrollState()),
 
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
+            Spacer(modifier = Modifier.height(24.dp))
             CardVisi()
             CardMisi()
             CardSejarah()
             CardLambang()
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

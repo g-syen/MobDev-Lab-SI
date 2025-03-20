@@ -89,21 +89,21 @@ fun FacilitiesAdminScreen(
         },
         topBar = {
             TopAppBar(
-                title = { Text("Fasilitas Lab SI") },
+                title = { Text("Fasilitas Lab SI", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { onClickBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF195693).copy(alpha = 0.8f),
-                    scrolledContainerColor = Color(0xFF195693).copy(alpha = 0.9f) // Optional
+                    containerColor = Color(0xFF19253F)
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .zIndex(1f)
             )
-        }
+        },
+        containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
         Column(
             modifier = Modifier
