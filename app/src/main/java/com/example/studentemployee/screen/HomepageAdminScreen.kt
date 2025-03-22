@@ -65,8 +65,8 @@ fun HomepageAdminScreen(
     firestore: FirebaseFirestore,
     onClickLogin: () -> Unit,
     onClickProfile: () -> Unit,
-    onClickLeadership: () -> Unit,
-    onClickMember: () -> Unit,
+    onClickLeadershipAdmin: () -> Unit,
+    onClickMemberAdmin: () -> Unit,
     onClickFacilitiesAdmin: () -> Unit,
     onClickStatistics: () -> Unit,
     onClickEvents: () -> Unit,
@@ -195,9 +195,9 @@ fun HomepageAdminScreen(
                 ) {
                     FeatureItem(Icons.Default.Book, "Profil Lab", onClickProfile)
                     Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.SupervisorAccount, "Pimpinan", onClickLeadership)
+                    FeatureItem(Icons.Default.SupervisorAccount, "Pimpinan", onClickLeadershipAdmin)
                     Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.Groups2, "Anggota", onClickMember)
+                    FeatureItem(Icons.Default.Groups2, "Anggota", onClickMemberAdmin)
                     Spacer(modifier = Modifier.width(8.dp))
                     FeatureItem(Icons.Default.HomeRepairService, "Fasilitas", onClickFacilitiesAdmin)
                     Spacer(modifier = Modifier.width(8.dp))

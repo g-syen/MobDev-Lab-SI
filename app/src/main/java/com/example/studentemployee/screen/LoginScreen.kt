@@ -90,7 +90,8 @@ fun LoginScreen(
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {
             TextField(
@@ -152,7 +153,7 @@ fun LoginScreen(
                     .align(Alignment.CenterHorizontally),
                 enabled = !isLoading,
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(Color(0xFF10375E))
+                colors = ButtonDefaults.buttonColors(Color(0xFF10375E), contentColor = Color(0xFFFFFFFF))
             ) {
                 if(isLoading) {
                     CircularProgressIndicator(

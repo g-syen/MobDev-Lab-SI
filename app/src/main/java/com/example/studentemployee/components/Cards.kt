@@ -27,6 +27,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -54,6 +56,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -69,7 +74,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -86,6 +93,7 @@ import com.example.studentemployee.data.Devotion
 import com.example.studentemployee.data.Event
 import com.example.studentemployee.data.Facilities
 import com.example.studentemployee.data.News
+import com.example.studentemployee.data.User
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -245,6 +253,197 @@ fun LeadershipCard(modifier: Modifier = Modifier, leader: Leader, navController:
     }
 }
 
+@Composable
+fun LeadershipAdminCard(
+    modifier: Modifier = Modifier,
+    leader: Leader,
+    navController: NavController,
+    onClickEdit : (Leader) -> Unit,
+    onClickDelete : (Leader) -> Unit
+) {
+
+    fun onClickViewPersonal(personalId: String) {
+        navController.navigate("personalmember/${personalId}")
+    }
+
+    RoundedCard (
+        modifier = Modifier.clickable {
+            onClickViewPersonal(leader.id)
+            Log.d("RoundedCard", "Card clicked!")
+        }
+
+    ){
+        Row(verticalAlignment = Alignment.CenterVertically, ) {
+            Column(modifier=Modifier.weight(1f)) {
+                Text(
+                    leader.position,
+                    fontSize = 14.sp,
+                    color = Color(0xffF37619),
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.height(5.dp))
+                Text(
+                    leader.name,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xff195693)
+                )
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton (onClick = { onClickEdit(leader) },
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = "Edit",
+                        tint = Color.Gray
+                    )
+                }
+                IconButton (onClick = { onClickDelete(leader) },
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Delete",
+                        tint = Color.Gray
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MemberCard(modifier: Modifier = Modifier, member: User, navController: NavController) {
+
+    fun onClickViewPersonal(personalId: String) {
+        navController.navigate("personalmember/${personalId}")
+    }
+
+    RoundedCard (
+        modifier = Modifier.clickable {
+            onClickViewPersonal(member.id)
+            Log.d("RoundedCard", "Card clicked!")
+        }
+
+    ){
+        Row(verticalAlignment = Alignment.CenterVertically, ) {
+            Text(
+                member.nama,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xff195693),
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = "Expand",
+                modifier = Modifier.size(24.dp),
+                tint = Color(0xffF37619)
+            )
+        }
+    }
+}
+
+@Composable
+fun MemberAdminCard(
+    modifier: Modifier = Modifier,
+    member: User,
+    navController: NavController,
+    onClickEdit : (User) -> Unit,
+    onClickDelete : (User) -> Unit
+) {
+
+    fun onClickViewPersonal(personalId: String) {
+        navController.navigate("personalmember/${personalId}")
+    }
+
+    RoundedCard (
+        modifier = Modifier.clickable {
+            onClickViewPersonal(member.id)
+            Log.d("RoundedCard", "Card clicked!")
+        }
+
+    ){
+        Row(verticalAlignment = Alignment.CenterVertically, ) {
+            Text(
+                member.nama,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xff195693),
+                modifier = Modifier.weight(1f)
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton (onClick = { onClickEdit(member) },
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = "Edit",
+                        tint = Color.Gray
+                    )
+                }
+                IconButton (onClick = { onClickDelete(member) },
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Delete",
+                        tint = Color.Gray
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SearchBar(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    onSearch: () -> Unit
+){
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        elevation = 4.dp,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Search, contentDescription = "Search Icon")
+            },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent
+            ),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    keyboardController?.hide()
+                    onSearch()
+                }
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun LeadershipCardPreview() {
@@ -299,8 +498,10 @@ fun FacilitiesAdminCard(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(facilities.link))
-                context.startActivity(intent)
+                if(facilities.link.isNotEmpty()){
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(facilities.link))
+                    context.startActivity(intent)
+                }
             },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
@@ -666,8 +867,10 @@ fun FacilitiesCard(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(facilities.link))
-                context.startActivity(intent)
+                if(facilities.link.isNotEmpty()){
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(facilities.link))
+                    context.startActivity(intent)
+                }
             },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
