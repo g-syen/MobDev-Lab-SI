@@ -39,4 +39,23 @@ class FirestoreRepository {
         awaitClose { listener.remove() }
     }
 
+    fun getMembers(): Flow<List<User>> = callbackFlow {
+        val listener = db.collection("users")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                if (snapshot != null) {
+                    val memberList = snapshot.documents.mapNotNull { doc ->
+                        doc.toObject<User>()?.copy(id = doc.id)
+                    }
+                    trySend(memberList).isSuccess
+                }
+            }
+
+        awaitClose { listener.remove() }
+    }
+
+
 }

@@ -60,21 +60,21 @@ fun FacilitiesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Fasilitas Lab SI") },
+                title = { Text("Fasilitas Lab SI", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { onClickBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF195693).copy(alpha = 0.8f),
-                    scrolledContainerColor = Color(0xFF195693).copy(alpha = 0.9f) // Optional
+                    containerColor = Color(0xFF19253F)
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .zIndex(1f) // Ensure it appears above content
+                    .zIndex(1f)
             )
-        }
+        },
+        containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -83,11 +83,10 @@ fun FacilitiesScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment =  Alignment.Start
         ) {
-            // Full-width Image Carousel without padding
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp) // Adjust height as needed
+                    .height(200.dp)
             ) {
                 ImageCarousel(facilities)
             }

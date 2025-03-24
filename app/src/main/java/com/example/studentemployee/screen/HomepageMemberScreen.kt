@@ -160,8 +160,8 @@ fun HomepageMemberScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Logout,
-                                contentDescription = "Login",
-                                tint = Color(0xFF195693)
+                                contentDescription = "Logout",
+                                tint = Color(0xFF19253F)
                             )
                         }
                         Column (
@@ -187,27 +187,29 @@ fun HomepageMemberScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF195693)
+                    containerColor = Color(0xFF19253F)
                 )
             )
         },
-        bottomBar = { BottomNavBarMember(navController) }
+        bottomBar = { BottomNavBarMember(navController) },
+        containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
         Column(
             modifier = Modifier
+                .padding(horizontal = 16.dp)
                 .padding(innerPadding)
-                .padding(16.dp)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment =  Alignment.Start
         ){
+            Spacer(modifier = Modifier.height(16.dp))
             Box (
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFF195693))
+                    .background(Color(0xFF10375E))
                     .padding(20.dp)
             ) {
                 Row(
@@ -246,7 +248,7 @@ fun HomepageMemberScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",
@@ -283,7 +285,7 @@ fun HomepageMemberScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",
@@ -320,7 +322,7 @@ fun HomepageMemberScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",
@@ -357,7 +359,7 @@ fun HomepageMemberScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",

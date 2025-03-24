@@ -29,20 +29,42 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
+import com.example.studentemployee.components.LeadershipAdminCard
+import com.example.studentemployee.data.User
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LeadershipScreen(
+fun LeadershipAdminScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     firestore: FirebaseFirestore,
-    viewModel: LeaderViewModel = viewModel()
+    viewModel: LeaderViewModel = viewModel(),
+    onClickAdd: () -> Unit
 ) {
     val leaderList by viewModel.leaderList.collectAsState()
+    fun deleteLeader(leader: Leader) {
+        viewModel.deleteLeader(leader, firestore)
+    }
+
+    fun onClickEdit(leader: Leader) {
+        navController.navigate("addeditleader/${leader.id}")
+    }
+
     Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onClickAdd() },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add Facility")
+            }
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -69,7 +91,12 @@ fun LeadershipScreen(
 
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            ListPimpinan(leaderList = leaderList, navController = navController)
+            ListPimpinanAdmin(
+                leaderList = leaderList,
+                navController = navController,
+                onClickEdit = { leader -> onClickEdit(leader) },
+                onClickDelete = { leader -> deleteLeader(leader) }
+            )
         }
     }
 }
@@ -77,26 +104,32 @@ fun LeadershipScreen(
 @Preview
 @Composable
 private fun LeadershipScreenPreview() {
-    LeadershipScreen(navController = rememberNavController(), firestore = FirebaseFirestore.getInstance())
+    LeadershipAdminScreen(navController = rememberNavController(), firestore = FirebaseFirestore.getInstance(), onClickAdd = {})
 }
 
 @Composable
-fun ListPimpinan(modifier: Modifier = Modifier, leaderList: List<Leader>, navController : NavController) {
+fun ListPimpinanAdmin(
+    modifier: Modifier = Modifier,
+    leaderList: List<Leader>,
+    navController : NavController,
+    onClickEdit : (Leader) -> Unit,
+    onClickDelete : (Leader) -> Unit
+) {
     Column( verticalArrangement = Arrangement.spacedBy(10.dp)) {
         leaderList.forEach { leader ->
-            LeadershipCard(leader = leader, navController = navController)
+            LeadershipAdminCard(leader = leader, navController = navController, onClickEdit = onClickEdit, onClickDelete = onClickDelete)
         }
     }
 }
 
 @Preview
 @Composable
-private fun ListPimpinanPreview() {
+private fun ListPimpinanAdminPreview() {
     val leaderList = listOf(
         Leader(id = "1", name = "Dr. Aditya Wibowo, M.Kom.", position = "Kepala Lab"),
         Leader(id = "2", name = "Prof. Bambang Prasetyo, Ph.D.", position = "Koordinator Riset"),
         Leader(id = "3", name = "Dewi Kartika, S.Kom., M.Sc.", position = "Kepala Divisi Sistem Informasi"),
         Leader(id = "4", name = "Andi Nugraha, S.T., M.T.", position = "Kepala Divisi Keamanan Siber")
     )
-    ListPimpinan(leaderList = leaderList, navController = rememberNavController())
+    ListPimpinanAdmin(leaderList = leaderList, navController = rememberNavController(), onClickEdit = {}, onClickDelete = {})
 }

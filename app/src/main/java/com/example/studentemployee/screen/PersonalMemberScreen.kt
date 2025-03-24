@@ -29,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -160,21 +161,22 @@ fun PersonalMemberScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(name) },
+                title = { Text(name,
+                    color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { onClickBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF195693),
-                    scrolledContainerColor = Color(0xFF195693).copy(alpha = 0.9f) // Optional
+                    containerColor = Color(0xFF19253F)
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .zIndex(1f)
             )
-        }
+        },
+        containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
         Column (modifier = Modifier
             .padding(innerPadding)
@@ -187,7 +189,8 @@ fun PersonalMemberScreen(
                     .fillMaxWidth()
                     .padding(16.dp),
                 shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.elevatedCardElevation(4.dp)
+                elevation = CardDefaults.elevatedCardElevation(4.dp),
+                colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
             ) {
                 Column(
                     modifier = Modifier
@@ -250,7 +253,7 @@ fun PersonalMemberScreen(
                                     },
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = Color(
-                                            0xFF007EC6
+                                            0xFF426193
                                         )
                                     ),
                                     shape = RoundedCornerShape(8.dp),
@@ -279,7 +282,8 @@ fun PersonalMemberScreen(
                     .padding(16.dp)
                     .height(400.dp),  // Set fixed height
                 shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.elevatedCardElevation(4.dp)
+                elevation = CardDefaults.elevatedCardElevation(4.dp),
+                colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
             ) {
                 Column(
                     modifier = Modifier
@@ -308,7 +312,8 @@ fun PersonalMemberScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                elevation = CardDefaults.elevatedCardElevation(4.dp)
+                elevation = CardDefaults.elevatedCardElevation(4.dp),
+                colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
             ) {
                 TabSection(selectedTab) { newTab ->
                     selectedTab = newTab

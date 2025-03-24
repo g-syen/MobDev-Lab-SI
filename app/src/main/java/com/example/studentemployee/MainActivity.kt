@@ -67,6 +67,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import com.example.studentemployee.screen.*
 import com.example.studentemployee.viewmodel.LeaderViewModel
+import com.example.studentemployee.viewmodel.MemberViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 
@@ -122,6 +123,10 @@ sealed class Screen(val route: String) {
     object HomepageAdmin : Screen("homepageadmin")
     object FacilitiesAdmin : Screen("facilitiesadmin")
     object AddEditFacility : Screen("addeditfacility")
+    object AddEditMember : Screen("addeditmember")
+    object MemberAdmin : Screen("memberadmin")
+    object AddEditLeader : Screen("addeditleader")
+    object LeadershipAdmin : Screen("leadershipadmin")
 
 }
 
@@ -131,10 +136,6 @@ fun AppNavigation(
     firestore: FirebaseFirestore,
     storage: FirebaseStorage
 ) {
-
-
-
-
     val navController = rememberNavController()
 
     var startDestination by remember { mutableStateOf(Screen.HomepageGuest.route) }
@@ -212,7 +213,8 @@ fun AppNavigation(
         }
 
         composable(Screen.Member.route) {
-            MemberScreen()
+            val viewModel: MemberViewModel = viewModel()
+            MemberScreen(navController = navController, firestore = firestore, viewModel = viewModel)
         }
 
         composable(Screen.Facilities.route) {
@@ -296,11 +298,11 @@ fun AppNavigation(
                 onClickProfile = {
                     navController.navigate(Screen.ProfileLab.route)
                 },
-                onClickLeadership = {
-                    navController.navigate(Screen.Leadership.route)
+                onClickLeadershipAdmin = {
+                    navController.navigate(Screen.LeadershipAdmin.route)
                 },
-                onClickMember = {
-                    navController.navigate(Screen.Member.route)
+                onClickMemberAdmin = {
+                    navController.navigate(Screen.MemberAdmin.route)
                 },
                 onClickFacilitiesAdmin = {
                     navController.navigate(Screen.FacilitiesAdmin.route)
@@ -321,6 +323,30 @@ fun AppNavigation(
                     navController.navigate(Screen.Journals.route)
                 },
                 navController = navController
+            )
+        }
+
+        composable(Screen.MemberAdmin.route) {
+            val viewModel: MemberViewModel = viewModel()
+            MemberAdminScreen(
+                navController = navController,
+                firestore = firestore,
+                viewModel = viewModel,
+                onClickAdd = {
+                    navController.navigate(Screen.AddEditMember.route)
+                }
+            )
+        }
+
+        composable(Screen.LeadershipAdmin.route) {
+            val viewModel: LeaderViewModel = viewModel()
+            LeadershipAdminScreen(
+                navController = navController,
+                firestore = firestore,
+                viewModel = viewModel,
+                onClickAdd = {
+                    navController.navigate(Screen.AddEditLeader.route)
+                }
             )
         }
 
@@ -351,6 +377,42 @@ fun AppNavigation(
                 firestore = firestore,
                 navController = navController,
                 facilityId = facilityId
+            )
+        }
+
+        composable(Screen.AddEditMember.route) {
+            AddEditMemberScreen(
+                firestore = firestore,
+                navController = navController,
+                auth = FirebaseAuth.getInstance(),
+                memberId = null
+            )
+        }
+
+        composable("addeditmember/{memberId}") { backStackEntry ->
+            val memberId = backStackEntry.arguments?.getString("memberId")
+            AddEditMemberScreen(
+                firestore = firestore,
+                navController = navController,
+                auth = FirebaseAuth.getInstance(),
+                memberId = memberId
+            )
+        }
+
+        composable(Screen.AddEditLeader.route) {
+            AddEditLeaderScreen(
+                firestore = firestore,
+                navController = navController,
+                leaderId = null
+            )
+        }
+
+        composable("addeditleader/{leaderId}") { backStackEntry ->
+            val leaderId = backStackEntry.arguments?.getString("leaderId")
+            AddEditLeaderScreen(
+                firestore = firestore,
+                navController = navController,
+                leaderId = leaderId
             )
         }
 
@@ -450,16 +512,6 @@ fun MenuScreen(
 ) {
     Text (text = "Menu Menu")
 }
-
-
-@Composable
-fun MemberScreen(
-
-) {
-    Text (text = "Member")
-}
-
-
 
 @Composable
 fun StatisticsScreen(

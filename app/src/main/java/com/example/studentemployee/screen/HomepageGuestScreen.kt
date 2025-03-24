@@ -144,7 +144,7 @@ fun HomepageGuestScreen(
                             Icon(
                                 imageVector = Icons.Filled.Login,
                                 contentDescription = "Login",
-                                tint = Color(0xFF195693)
+                                tint = Color(0xFF19253F)
                             )
                         }
                         Column (
@@ -167,7 +167,8 @@ fun HomepageGuestScreen(
                                     Text(
                                         text = "Masuk",
                                         style = MaterialTheme.typography.titleSmall,
-                                        modifier = Modifier.padding(0.dp)
+                                        modifier = Modifier.padding(0.dp),
+                                        color = Color(0xFFF37619)
                                     )
                                 }
                                 Text (
@@ -180,27 +181,29 @@ fun HomepageGuestScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF195693)
+                    containerColor = Color(0xFF19253F)
                 )
             )
         },
-        bottomBar = { BottomNavBar(navController) }
+        bottomBar = { BottomNavBar(navController) },
+        containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
         Column(
             modifier = Modifier
+                .padding(horizontal = 16.dp)
                 .padding(innerPadding)
-                .padding(16.dp)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment =  Alignment.Start
         ){
+            Spacer(modifier = Modifier.height(16.dp))
             Box (
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFF195693))
+                    .background(Color(0xFF10375E))
                     .padding(20.dp)
             ) {
                 Row(
@@ -239,11 +242,12 @@ fun HomepageGuestScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White
                     )
                 }
             }
@@ -276,11 +280,12 @@ fun HomepageGuestScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White
                     )
                 }
             }
@@ -313,11 +318,12 @@ fun HomepageGuestScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White
                     )
                 }
             }
@@ -350,11 +356,12 @@ fun HomepageGuestScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                 ){
                     Text(
                         text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White
                     )
                 }
             }
