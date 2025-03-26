@@ -74,6 +74,7 @@ import com.google.firebase.storage.FirebaseStorage
 class MainActivity : ComponentActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
+
     //    private lateinit var imageDao: ImageDao
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,7 +119,9 @@ sealed class Screen(val route: String) {
     object Content : Screen("content")
     object Profile : Screen("profile")
     object Menu : Screen("menu")
-    object PersonalMember: Screen("personalmember")
+    object MenuMember : Screen("menumember")
+    object PersonalMember : Screen("personalmember")
+    object Search : Screen("search")
 
     object HomepageAdmin : Screen("homepageadmin")
     object FacilitiesAdmin : Screen("facilitiesadmin")
@@ -144,18 +147,18 @@ fun AppNavigation(
         firestore.collection("users").document(currentUser.uid)
             .get()
             .addOnSuccessListener { document ->
-                if(document.exists()) {
+                if (document.exists()) {
                     val role = document.getString("role")
                     Log.d("Firestore", "User role: $role")
 
-                    startDestination = when(role) {
+                    startDestination = when (role) {
                         "admin" -> Screen.HomepageAdmin.route
                         "member" -> Screen.HomepageMember.route
                         else -> Screen.HomepageGuest.route
                     }
                 }
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 Log.e("Firestore", "Error fetching role", it)
             }
 
@@ -174,17 +177,17 @@ fun AppNavigation(
                             val role = document.getString("role") ?: "guest"
                             Log.d("Firestore", "User role: $role")
 
-                            val destination = when (role){
+                            val destination = when (role) {
                                 "admin" -> Screen.HomepageAdmin.route
                                 "member" -> Screen.HomepageMember.route
                                 else -> Screen.HomepageGuest.route
                             }
 
                             navController.navigate(destination) {
-                                popUpTo(Screen.Login.route) {inclusive = true}
+                                popUpTo(Screen.Login.route) { inclusive = true }
                             }
                         }
-                        .addOnFailureListener{
+                        .addOnFailureListener {
                             Log.e("Firestore", "Error fetching role", it)
                             navController.navigate(Screen.HomepageGuest.route) {
                                 popUpTo(Screen.Login.route) { inclusive = true }
@@ -209,12 +212,20 @@ fun AppNavigation(
 
         composable(Screen.Leadership.route) {
             val viewModel: LeaderViewModel = viewModel()
-            LeadershipScreen(navController = navController, firestore = firestore, viewModel = viewModel)
+            LeadershipScreen(
+                navController = navController,
+                firestore = firestore,
+                viewModel = viewModel
+            )
         }
 
         composable(Screen.Member.route) {
             val viewModel: MemberViewModel = viewModel()
-            MemberScreen(navController = navController, firestore = firestore, viewModel = viewModel)
+            MemberScreen(
+                navController = navController,
+                firestore = firestore,
+                viewModel = viewModel
+            )
         }
 
         composable(Screen.Facilities.route) {
@@ -284,6 +295,14 @@ fun AppNavigation(
 
         composable(Screen.Menu.route) {
             MenuScreen()
+        }
+
+        composable(Screen.MenuMember.route) {
+            MenuMemberScreen(navController = navController)
+        }
+
+        composable(Screen.Search.route){
+            SearchScreen()
         }
 
         composable(Screen.HomepageAdmin.route) {
@@ -422,7 +441,9 @@ fun AppNavigation(
                 onClickLogin = {
                     FirebaseAuth.getInstance().signOut()
                     navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.HomepageMember.route) { inclusive = true }
+                        popUpTo(Screen.HomepageMember.route) {
+                            inclusive = true
+                        }
                     }
                 },
                 onClickProfile = {
@@ -503,58 +524,64 @@ fun AppNavigation(
 fun ProfileScreen(
 
 ) {
-    Text (text = "Profile Member")
+    Text(text = "Profile Member")
 }
 
 @Composable
 fun MenuScreen(
 
 ) {
-    Text (text = "Menu Menu")
+    Text(text = "Menu Menu")
 }
+
+
 
 @Composable
 fun StatisticsScreen(
 
 ) {
-    Text (text = "Statistics")
+    Text(text = "Statistics")
 }
 
 @Composable
 fun EventsScreen(
 
 ) {
-    Text (text = "Events")
+    Text(text = "Events")
 }
 
 @Composable
 fun NewsScreen(
 
 ) {
-    Text (text = "News")
+    Text(text = "News")
 }
 
 @Composable
 fun ArticlesScreen(
 
 ) {
-    Text (text = "Articles")
+    Text(text = "Articles")
 }
 
 @Composable
 fun JournalsScreen(
 
 ) {
-    Text (text = "Journals")
+    Text(text = "Journals")
 }
 
 @Composable
 fun ContentScreen(
 
 ) {
-    Text (text = "Content")
+    Text(text = "Content")
 }
 
+@Composable
+fun SearchScreen(modifier: Modifier = Modifier) {
+    Text(text = "Search")
+}
 
 
 

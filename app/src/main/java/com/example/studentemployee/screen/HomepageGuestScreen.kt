@@ -2,6 +2,7 @@ package com.example.studentemployee.screen
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -92,7 +93,8 @@ fun HomepageGuestScreen(
         firestore.collection("events")
             .get()
             .addOnSuccessListener { result ->
-                events = result.documents.mapNotNull { it.toObject(Event::class.java) }
+                events =
+                    result.documents.mapNotNull { it.toObject(Event::class.java) }
             }
             .addOnFailureListener {
                 Log.e("Firestore", "Error getting documents", it)
@@ -100,7 +102,8 @@ fun HomepageGuestScreen(
         firestore.collection("news")
             .get()
             .addOnSuccessListener { result ->
-                news = result.documents.mapNotNull { it.toObject(News::class.java)}
+                news =
+                    result.documents.mapNotNull { it.toObject(News::class.java) }
             }
             .addOnFailureListener {
                 Log.e("Firestore", "Error getting documents", it)
@@ -108,17 +111,19 @@ fun HomepageGuestScreen(
         firestore.collection("articles")
             .get()
             .addOnSuccessListener { result ->
-                articles = result.documents.mapNotNull { it.toObject(Article::class.java)}
+                articles =
+                    result.documents.mapNotNull { it.toObject(Article::class.java) }
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 Log.e("Firestore", "Error getting documents", it)
             }
         firestore.collection("journals")
             .get()
             .addOnSuccessListener { result ->
-                journals = result.documents.mapNotNull { it.toObject(Article::class.java)}
+                journals =
+                    result.documents.mapNotNull { it.toObject(Article::class.java) }
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 Log.e("Firestore", "Error getting documents", it)
             }
 
@@ -128,7 +133,8 @@ fun HomepageGuestScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Row(modifier = Modifier.fillMaxWidth(),
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
                     ) {
@@ -147,31 +153,31 @@ fun HomepageGuestScreen(
                                 tint = Color(0xFF19253F)
                             )
                         }
-                        Column (
+                        Column(
                             verticalArrangement = Arrangement.Center,
                             modifier = Modifier.weight(1f)
-                        ){
+                        ) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "Halo, Pengunjung",
                                 color = Color.White,
                                 style = MaterialTheme.typography.titleSmall
                             )
-
-                            Row (
+                            Row(
                                 verticalAlignment = Alignment.CenterVertically
-                            ){
-                                TextButton(onClick = { onClickLogin()},
-                                    contentPadding = PaddingValues(0.dp)
-                                ) {
-                                    Text(
-                                        text = "Masuk",
-                                        style = MaterialTheme.typography.titleSmall,
-                                        modifier = Modifier.padding(0.dp),
-                                        color = Color(0xFFF37619)
-                                    )
-                                }
-                                Text (
+                            ) {
+
+                                Text(
+                                    text = "Masuk",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    modifier = Modifier
+                                        .padding(0.dp)
+                                        .clickable { onClickLogin() },
+                                    color = Color(0xFFF37619),
+                                )
+                                Spacer(Modifier.width(5.dp))
+
+                                Text(
                                     text = "untuk menggunakan menu lain",
                                     style = MaterialTheme.typography.titleSmall,
                                     color = Color.White
@@ -195,10 +201,10 @@ fun HomepageGuestScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment =  Alignment.Start
-        ){
+            horizontalAlignment = Alignment.Start
+        ) {
             Spacer(modifier = Modifier.height(16.dp))
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -210,28 +216,44 @@ fun HomepageGuestScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround,
                 ) {
-                    FeatureItem(Icons.Default.Book, "Profil Lab", onClickProfile)
+                    FeatureItem(
+                        Icons.Default.Book,
+                        "Profil Lab",
+                        onClickProfile
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.SupervisorAccount, "Pimpinan", onClickLeadership)
+                    FeatureItem(
+                        Icons.Default.SupervisorAccount,
+                        "Pimpinan",
+                        onClickLeadership
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     FeatureItem(Icons.Default.Groups2, "Anggota", onClickMember)
                     Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.HomeRepairService, "Fasilitas", onClickFacilities)
+                    FeatureItem(
+                        Icons.Default.HomeRepairService,
+                        "Fasilitas",
+                        onClickFacilities
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    FeatureItem(Icons.Default.BarChart, "Statistik", onClickStatistics)
+                    FeatureItem(
+                        Icons.Default.BarChart,
+                        "Statistik",
+                        onClickStatistics
+                    )
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row (
+            Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                Text (
+                Text(
                     style = MaterialTheme.typography.titleMedium,
                     text = "Event saat ini",
                     color = Color(0xFFf37619)
@@ -242,8 +264,12 @@ fun HomepageGuestScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
-                ){
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(
+                            0xFF10375E
+                        )
+                    )
+                ) {
                     Text(
                         text = "Lihat Semua",
                         style = MaterialTheme.typography.bodySmall,
@@ -262,14 +288,14 @@ fun HomepageGuestScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row (
+            Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                Text (
+                Text(
                     style = MaterialTheme.typography.titleMedium,
                     text = "Berita seputar Lab",
                     color = Color(0xFFf37619)
@@ -280,8 +306,12 @@ fun HomepageGuestScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
-                ){
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(
+                            0xFF10375E
+                        )
+                    )
+                ) {
                     Text(
                         text = "Lihat Semua",
                         style = MaterialTheme.typography.bodySmall,
@@ -300,14 +330,14 @@ fun HomepageGuestScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row (
+            Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                Text (
+                Text(
                     style = MaterialTheme.typography.titleMedium,
                     text = "Artikel",
                     color = Color(0xFFf37619)
@@ -318,8 +348,12 @@ fun HomepageGuestScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
-                ){
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(
+                            0xFF10375E
+                        )
+                    )
+                ) {
                     Text(
                         text = "Lihat Semua",
                         style = MaterialTheme.typography.bodySmall,
@@ -338,14 +372,14 @@ fun HomepageGuestScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row (
+            Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                Text (
+                Text(
                     style = MaterialTheme.typography.titleMedium,
                     text = "Jurnal",
                     color = Color(0xFFf37619)
@@ -356,8 +390,12 @@ fun HomepageGuestScreen(
                     modifier = Modifier
                         .size(width = 120.dp, height = 32.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
-                ){
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(
+                            0xFF10375E
+                        )
+                    )
+                ) {
                     Text(
                         text = "Lihat Semua",
                         style = MaterialTheme.typography.bodySmall,

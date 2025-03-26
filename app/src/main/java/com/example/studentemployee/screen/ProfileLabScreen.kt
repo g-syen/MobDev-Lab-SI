@@ -1,5 +1,6 @@
 package com.example.studentemployee.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.studentemployee.R
 import com.example.studentemployee.components.DropDownProfile
 import com.example.studentemployee.components.RoundedCard
 import com.example.studentemployee.components.SectionHeader
@@ -31,6 +34,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.Alignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +50,11 @@ fun ProfileLabScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -57,6 +65,7 @@ fun ProfileLabScreen(
         containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -65,12 +74,12 @@ fun ProfileLabScreen(
 
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             CardVisi()
             CardMisi()
             CardSejarah()
             CardLambang()
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }
@@ -207,10 +216,30 @@ private fun ListLambangPreview() {
 }
 
 @Composable
+fun CardLogo(modifier: Modifier = Modifier) {
+    RoundedCard {
+        Image(
+            painterResource(id = R.drawable.logo_lab_si),
+            contentDescription = "Logo Lab SI"
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun CardLogoPreview() {
+    CardLogo()
+}
+
+@Composable
 fun CardLambang(modifier: Modifier = Modifier) {
     RoundedCard {
         Column() {
             SectionHeader(text = "Lambang")
+            Image(
+                painterResource(id = R.drawable.logo_lab_si),
+                contentDescription = "Logo Lab SI"
+            )
             Spacer(Modifier.height(10.dp))
             ListLambang()
         }

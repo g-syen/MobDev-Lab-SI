@@ -599,7 +599,7 @@ fun BottomNavBar(navController: NavController) {
 fun BottomNavBarMember(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, "homepagemember"),
-        BottomNavItem("Menu", Icons.Default.Widgets, "menu"),
+        BottomNavItem("Menu", Icons.Default.Widgets, "menumember"),
         BottomNavItem("Search", Icons.Default.Search, "search"),
         BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "content"),
         BottomNavItem("Profil", Icons.Outlined.AccountBox, "profile")
