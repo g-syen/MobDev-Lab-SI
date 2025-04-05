@@ -58,7 +58,7 @@ fun MenuMemberScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    androidx.compose.material3.Scaffold(
+    Scaffold(
         topBar = {
             TopAppBar(
                 title = {
@@ -76,7 +76,7 @@ fun MenuMemberScreen(
                                 .width(56.dp)
                                 .height(36.dp)
                         ) {
-                            androidx.compose.material3.Icon(
+                            Icon(
                                 imageVector = Icons.Filled.Logout,
                                 contentDescription = "Logout",
                                 tint = Color(0xFF19253F)
@@ -96,7 +96,7 @@ fun MenuMemberScreen(
             )
         },
         bottomBar = { BottomNavBarMember(navController) },
-        containerColor = Color(0xFFF9F9F9)
+        contentColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -104,7 +104,7 @@ fun MenuMemberScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical =10.dp)
+                .padding(horizontal = 24.dp, vertical = 10.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             CardMenu(
@@ -138,15 +138,21 @@ private fun MenuMemberScreenPreview() {
 }
 
 @Composable
-fun CardMenu(modifier: Modifier = Modifier, text: String, icon: ImageVector,onClick: () -> Unit) {
+fun CardMenu(
+    modifier: Modifier = Modifier,
+    text: String,
+    icon: ImageVector,
+    onClick: () -> Unit
+) {
     Box(
         modifier = modifier
+            .clickable { onClick() }
             .fillMaxWidth()
             .shadow(8.dp, shape = RoundedCornerShape(8.dp)) // Shadow tetap ada
             .clip(RoundedCornerShape(8.dp)) // Clip agar background mengikuti shape
             .background(Color.White) // Background mengikuti clip
             .padding(10.dp) // Tambahkan padding agar konten tidak menempel
-            .clickable {onClick() }
+
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -155,7 +161,7 @@ fun CardMenu(modifier: Modifier = Modifier, text: String, icon: ImageVector,onCl
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    modifier = Modifier.size(35.dp),
+                    modifier = Modifier.size(30.dp),
                     imageVector = icon,
                     contentDescription = "Icon $text",
                     tint = Color(0xff093376)

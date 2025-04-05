@@ -122,6 +122,7 @@ sealed class Screen(val route: String) {
     object MenuMember : Screen("menumember")
     object PersonalMember : Screen("personalmember")
     object Search : Screen("search")
+    object EditProfile:Screen("editprofile")
 
     object HomepageAdmin : Screen("homepageadmin")
     object FacilitiesAdmin : Screen("facilitiesadmin")
@@ -290,7 +291,11 @@ fun AppNavigation(
         }
 
         composable(Screen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(navController = navController)
+        }
+
+        composable(Screen.EditProfile.route){
+            EditProfileScreen(navController = navController)
         }
 
         composable(Screen.Menu.route) {
@@ -520,12 +525,7 @@ fun AppNavigation(
     }
 }
 
-@Composable
-fun ProfileScreen(
 
-) {
-    Text(text = "Profile Member")
-}
 
 @Composable
 fun MenuScreen(
