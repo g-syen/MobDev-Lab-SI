@@ -1,6 +1,5 @@
 package com.example.studentemployee.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,11 +22,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Biotech
 import androidx.compose.material.icons.filled.Handshake
-import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LockPerson
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.MenuBook
-import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -41,16 +38,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.studentemployee.R
+import com.example.studentemployee.Screen
 import com.example.studentemployee.components.BottomNavBarMember
-import com.example.studentemployee.components.RoundedCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,22 +105,22 @@ fun MenuMemberScreen(
             CardMenu(
                 text = "Tambahkan Penelitian",
                 icon = Icons.Default.Biotech,
-                onClick = {}
+                onClick = {navController.navigate(Screen.AddEditResearch.route)}
             )
             CardMenu(
                 text = "Tambahkan Pengabdian",
                 icon = Icons.Default.Handshake,
-                onClick = {}
+                onClick = {navController.navigate(Screen.AddEditDevotion.route)}
             )
             CardMenu(
                 text = "Tambahkan Pengajaran",
                 icon = Icons.Default.MenuBook,
-                onClick = {}
+                onClick = {navController.navigate(Screen.AddEditTeaching.route)}
             )
             CardMenu(
                 text = "Ganti Password",
                 icon = Icons.Default.LockPerson,
-                onClick = {}
+                onClick = {navController.navigate(Screen.ChangePassword.route)}
             )
         }
     }

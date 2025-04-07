@@ -244,7 +244,7 @@ fun CustomButton(
         Text(
             text,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
+            fontSize = 18.sp
         )
     }
 }

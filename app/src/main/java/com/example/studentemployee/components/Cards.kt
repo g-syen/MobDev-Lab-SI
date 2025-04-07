@@ -105,7 +105,7 @@ fun TopAppBarMenu(
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFF195693)
+            containerColor = Color(0xFF19253F)
         ),
         title = {
             Text(

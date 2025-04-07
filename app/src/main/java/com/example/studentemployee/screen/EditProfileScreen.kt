@@ -12,8 +12,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.studentemployee.Screen
+import com.example.studentemployee.components.TopAppBarMenu
 import com.example.studentemployee.viewmodel.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 
@@ -88,28 +89,29 @@ fun EditProfileScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Edit Profil Saya",
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        style = MaterialTheme.typography.titleSmall,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF19253F)
-                )
-            )
+//            TopAppBar(
+//                title = {
+//                    Text(
+//                        "Edit Profil Saya",
+//                        color = Color.White,
+//                        fontSize = 16.sp,
+//                        style = MaterialTheme.typography.titleSmall,
+//                    )
+//                },
+//                navigationIcon = {
+//                    IconButton(onClick = { navController.navigateUp() }) {
+//                        Icon(
+//                            Icons.Default.ArrowBack,
+//                            contentDescription = "Back",
+//                            tint = Color.White
+//                        )
+//                    }
+//                },
+//                colors = TopAppBarDefaults.topAppBarColors(
+//                    containerColor = Color(0xFF19253F)
+//                )
+//            )
+            TopAppBarMenu(onClick = {navController.navigateUp()}, text = "Edit Profil Saya")
         },
         containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
@@ -218,12 +220,16 @@ fun CustomDivider(modifier: Modifier = Modifier) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    supportingText: (@Composable (() -> Unit))? = null
+
 ) {
     TextField(
         value = value,
@@ -236,13 +242,15 @@ fun CustomTextField(
             fontSize = 16.sp
         ),
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color(0XFFF9F9F9),
+            containerColor = Color(0XFFF9F9F9),
             cursorColor = Color(0xFF195693),
             focusedIndicatorColor = Color(0XFF195693),
             unfocusedIndicatorColor = Color(0XFF195693)
         ),
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        supportingText = supportingText,
+        isError = isError
     )
 }
 

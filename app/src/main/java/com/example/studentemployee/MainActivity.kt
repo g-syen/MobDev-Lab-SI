@@ -1,36 +1,19 @@
 package com.example.studentemployee
 
 import android.os.Bundle
-import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import com.example.studentemployee.ui.theme.StudentEmployeeTheme
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.ui.layout.ContentScale
-import android.net.Uri
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
@@ -39,32 +22,8 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import android.content.Intent
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import coil.compose.AsyncImage
 import com.example.studentemployee.screen.*
 import com.example.studentemployee.viewmodel.LeaderViewModel
 import com.example.studentemployee.viewmodel.MemberViewModel
@@ -117,12 +76,17 @@ sealed class Screen(val route: String) {
     object Articles : Screen("articles")
     object Journals : Screen("journals")
     object Content : Screen("content")
-    object Profile : Screen("profile")
     object Menu : Screen("menu")
+    object Search : Screen("search")
+
+    object Profile : Screen("profile")
     object MenuMember : Screen("menumember")
     object PersonalMember : Screen("personalmember")
-    object Search : Screen("search")
     object EditProfile:Screen("editprofile")
+    object AddEditResearch:Screen("addeditresearch")
+    object AddEditDevotion:Screen("addeditdevotion")
+    object AddEditTeaching:Screen("addeditteaching")
+    object ChangePassword:Screen("changepassword")
 
     object HomepageAdmin : Screen("homepageadmin")
     object FacilitiesAdmin : Screen("facilitiesadmin")
@@ -308,6 +272,22 @@ fun AppNavigation(
 
         composable(Screen.Search.route){
             SearchScreen()
+        }
+
+        composable(Screen.AddEditResearch.route){
+            AddEditResearchScreen(navController = navController)
+        }
+
+        composable(Screen.AddEditDevotion.route){
+            AddEditDevotionScreen(navController = navController)
+        }
+
+        composable(Screen.AddEditTeaching.route){
+            AddEditTeachingScreen(navController = navController)
+        }
+
+        composable(Screen.ChangePassword.route){
+            ChangePasswordScreen(navController = navController)
         }
 
         composable(Screen.HomepageAdmin.route) {
@@ -583,17 +563,18 @@ fun SearchScreen(modifier: Modifier = Modifier) {
     Text(text = "Search")
 }
 
+@Composable
+fun AddEditDevotionScreen(modifier: Modifier = Modifier,navController: NavController) {
+    Text("Add Devotion")
+}
 
+@Composable
+fun AddEditTeachingScreen(modifier: Modifier = Modifier,navController: NavController) {
+    Text("Add Teaching")
+}
 
-
-
-
-
-
-
-
-
-
-
-
+@Composable
+fun ChangePasswordScreen(modifier: Modifier = Modifier,navController: NavController) {
+    Text("Change Password")
+}
 

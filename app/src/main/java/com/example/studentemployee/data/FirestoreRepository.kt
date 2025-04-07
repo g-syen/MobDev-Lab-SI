@@ -69,37 +69,45 @@ class FirestoreRepository {
         awaitClose { listener.remove() }
     }
 
-    fun getUserSocialLinks(userId: String): Flow<Map<String, String>> = callbackFlow {
-        val listener = db.collection("users")
-            .document(userId)
-            .collection("socialmedia")
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null) {
-                    val linksMap = mutableMapOf<String, String>()
-                    for (doc in snapshot) {
-                        val platform = doc.id
-                        val link = doc.getString("link")
-                        if (!link.isNullOrEmpty()) {
-                            linksMap[platform] = link
-                        }
+    fun getUserSocialLinks(userId: String): Flow<Map<String, String>> =
+        callbackFlow {
+            val listener = db.collection("users")
+                .document(userId)
+                .collection("socialmedia")
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null) {
+                        close(error)
+                        return@addSnapshotListener
                     }
-                    trySend(linksMap).isSuccess
+
+                    if (snapshot != null) {
+                        val linksMap = mutableMapOf<String, String>()
+                        for (doc in snapshot) {
+                            val platform = doc.id
+                            val link = doc.getString("link")
+                            if (!link.isNullOrEmpty()) {
+                                linksMap[platform] = link
+                            }
+                        }
+                        trySend(linksMap).isSuccess
+                    }
                 }
-            }
 
-        awaitClose { listener.remove() }
-    }
+            awaitClose { listener.remove() }
+        }
 
-    fun updateUserProfile(userId: String, profileData: Map<String, Any>): Task<Void> {
+    fun updateUserProfile(
+        userId: String,
+        profileData: Map<String, Any>
+    ): Task<Void> {
         return db.collection("users").document(userId).update(profileData)
     }
 
-    fun updateSocialLink(userId: String, platform: String, link: String): Task<Void> {
+    fun updateSocialLink(
+        userId: String,
+        platform: String,
+        link: String
+    ): Task<Void> {
         val data = mapOf("link" to link)
         return db.collection("users")
             .document(userId)
@@ -119,7 +127,8 @@ class FirestoreRepository {
                 }
 
                 if (snapshot != null) {
-                    val articles = snapshot.documents.mapNotNull { it.toObject(Article::class.java) }
+                    val articles =
+                        snapshot.documents.mapNotNull { it.toObject(Article::class.java) }
                     trySend(articles).isSuccess
                 }
             }
@@ -138,7 +147,8 @@ class FirestoreRepository {
                 }
 
                 if (snapshot != null) {
-                    val devotions = snapshot.documents.mapNotNull { it.toObject(Devotion::class.java) }
+                    val devotions =
+                        snapshot.documents.mapNotNull { it.toObject(Devotion::class.java) }
                     trySend(devotions).isSuccess
                 }
             }
@@ -146,4 +156,58 @@ class FirestoreRepository {
         awaitClose { listener.remove() }
     }
 
+    fun getUserResearches(userId: String): Flow<List<Research>> = callbackFlow {
+        val listener = db
+            .collection("users")
+            .document(userId)
+            .collection("articles")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    val researches =
+                        snapshot.documents.mapNotNull { doc ->
+                            val research = doc.toObject(Research::class.java)
+                            research?.copy(id = doc.id)
+                        }
+                    trySend(researches).isSuccess
+                }
+            }
+
+        awaitClose { listener.remove() }
+    }
+
+    fun addResearch(userId: String, research: Research): Task<Void> {
+        //belum buat collection research sendiri
+        val docRef = db
+            .collection("users")
+            .document(userId)
+            .collection("articles")
+            .document()
+        val researchWithId = research.copy(id = docRef.id)
+
+        return docRef.set(researchWithId)
+    }
+
+    fun updateResearch(userId: String, research: Research): Task<Void> {
+        //belum buat collection research sendiri
+        return db
+            .collection("users")
+            .document(userId)
+            .collection("articles")
+            .document(research.id).set(research)
+    }
+
+    fun deleteResearch(userId: String, researchId: String, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+        db.collection("users")
+            .document(userId)
+            .collection("articles")
+            .document(researchId)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
 }
