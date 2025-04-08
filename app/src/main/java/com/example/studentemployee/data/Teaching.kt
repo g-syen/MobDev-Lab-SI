@@ -1,7 +1,7 @@
 package com.example.studentemployee.data
 
-data class Article(
+data class Teaching(
     override val title: String = "",
-    val authors: String = "",
-    val link: String = ""
+    val year: String = "",
+    val semester: String = ""
 ) : HasTitle

@@ -282,7 +282,7 @@ fun HomepageGuestScreen(
 
             LazyRow {
                 items(events) { event ->
-                    EventCard(event)
+                    EventCard(event, true)
                 }
             }
 
@@ -324,7 +324,7 @@ fun HomepageGuestScreen(
 
             LazyRow {
                 items(news) { news ->
-                    NewsCard(news)
+                    NewsCard(news, true)
                 }
             }
 

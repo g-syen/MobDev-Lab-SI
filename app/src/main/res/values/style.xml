@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Custom Date Picker Dialog Theme -->
+    <style name="CustomDatePickerDialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:windowBackground">#FFFFFF</item>
+        <item name="colorPrimary">#19253F</item>
+        <item name="colorSecondary">#19253F</item>
+        <item name="android:buttonStyle">@style/CustomDialogButton</item>
+    </style>
+
+    <!-- Custom Time Picker Dialog Theme -->
+    <style name="CustomTimePickerDialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:windowBackground">#FFFFFF</item>
+        <item name="colorPrimary">#19253F</item>
+        <item name="colorSecondary">#19253F</item>
+        <item name="android:buttonStyle">@style/CustomDialogButton</item>
+    </style>
+
+    <!-- Custom button style for dialog buttons -->
+    <style name="CustomDialogButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">#F37619</item> <!-- Orange text for dialog buttons -->
+    </style>
+</resources>

@@ -1,5 +1,7 @@
 package com.example.studentemployee.components
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -35,6 +37,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
@@ -44,7 +49,9 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material.icons.outlined.AccountBox
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -56,7 +63,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -87,13 +96,16 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.studentemployee.R
 import com.example.studentemployee.data.Article
 import com.example.studentemployee.data.BottomNavItem
 import com.example.studentemployee.data.Devotion
 import com.example.studentemployee.data.Event
 import com.example.studentemployee.data.Facilities
 import com.example.studentemployee.data.News
+import com.example.studentemployee.data.Teaching
 import com.example.studentemployee.data.User
+import java.util.Calendar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -498,7 +510,7 @@ fun FacilitiesAdminCard(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                if(facilities.link.isNotEmpty()){
+                if (facilities.link.isNotEmpty()) {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(facilities.link))
                     context.startActivity(intent)
                 }
@@ -566,7 +578,7 @@ fun FacilitiesAdminCard(
 fun BottomNavBar(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, "homepageguest"),
-        BottomNavItem("Search", Icons.Default.Search, "search"),
+        BottomNavItem("Search", Icons.Default.Search, "searchguest"),
         BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "content")
     )
 
@@ -600,7 +612,7 @@ fun BottomNavBarMember(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, "homepagemember"),
         BottomNavItem("Menu", Icons.Default.Widgets, "menumember"),
-        BottomNavItem("Search", Icons.Default.Search, "search"),
+        BottomNavItem("Search", Icons.Default.Search, "searchmember"),
         BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "content"),
         BottomNavItem("Profil", Icons.Outlined.AccountBox, "profile")
     )
@@ -629,8 +641,8 @@ fun BottomNavBarMember(navController: NavController) {
 fun BottomNavBarAdmin(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, "homepageadmin"),
-        BottomNavItem("Menu", Icons.Default.Widgets, "menu"),
-        BottomNavItem("Search", Icons.Default.Search, "search"),
+        BottomNavItem("Menu", Icons.Default.Widgets, "menuadmin"),
+        BottomNavItem("Search", Icons.Default.Search, "searchadmin"),
         BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "content"),
         BottomNavItem("Profil", Icons.Outlined.AccountBox, "profile")
     )
@@ -690,97 +702,300 @@ fun FeatureItem(
 
 @Composable
 fun EventCard(
-    event: Event
+    event: Event,
+    axis: Boolean,
+    editDelete: Boolean = false,
+    onEditEvent: () -> Unit = {},
+    onDeleteEvent: () -> Unit = {}
 ){
     val context = LocalContext.current
-    ElevatedCard(
-        modifier = Modifier
-            .width(180.dp)
-            .height(220.dp)
-            .padding(8.dp)
-            .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.link))
-                context.startActivity(intent)
-            },
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(Color.White)
-    ) {
-        Column {
-            AsyncImage(
-                model = event.imageUrl,
-                contentDescription = "Event Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp), // Image size
-                contentScale = ContentScale.Crop
-            )
+    if(axis)
+        ElevatedCard(
+            modifier = Modifier
+                .width(180.dp)
+                .height(220.dp)
+                .padding(8.dp)
+                .clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.link))
+                    context.startActivity(intent)
+                },
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+            colors = CardDefaults.cardColors(Color.White)
+        ) {
+            Column {
+                AsyncImage(
+                    model = event.imageUrl,
+                    contentDescription = "Event Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp), // Image size
+                    contentScale = ContentScale.Crop
+                )
 
-            Column(modifier = Modifier.padding(8.dp)) {
-                androidx.compose.material3.Text(
-                    text = event.title,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                androidx.compose.material3.Text(
-                    text = event.date,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
-                androidx.compose.material3.Text(
-                    text = event.time,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
+                Column(modifier = Modifier.padding(8.dp)) {
+                    androidx.compose.material3.Text(
+                        text = event.title,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    androidx.compose.material3.Text(
+                        text = event.date,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                    androidx.compose.material3.Text(
+                        text = event.time,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                }
             }
         }
-    }
+    else
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .padding(8.dp)
+                .clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.link))
+                    context.startActivity(intent)
+                },
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+            colors = CardDefaults.cardColors(Color.White)
+        ) {
+            Row {
+                AsyncImage(
+                    model = event.imageUrl,
+                    contentDescription = "Event Image",
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(100.dp),
+                    contentScale = ContentScale.Crop
+                )
+
+                Column(modifier = Modifier.padding(8.dp)) {
+                    Row {
+                        androidx.compose.material3.Text(
+                            text = event.date + "\t\t-",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFFE2640D),
+                            fontWeight = FontWeight.Bold
+                        )
+                        androidx.compose.material3.Text(
+                            text = event.time,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFFE2640D),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = event.title,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            color = Color(0xFF195693),
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        if (editDelete) {
+                            Row {
+                                IconButton(onClick = onEditEvent) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Edit,
+                                        contentDescription = "Edit Event",
+                                        tint = Color(0xFF426193)
+                                    )
+                                }
+                                IconButton(onClick = onDeleteEvent) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = "Delete Event",
+                                        tint = Color(0xFFE55304)
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+
+            }
+        }
 }
 
 @Composable
 fun NewsCard(
-    news: News
+    news: News,
+    axis: Boolean,
+    editDelete: Boolean = false,
+    onEditNews: () -> Unit = {},
+    onDeleteNews: () -> Unit = {}
+){
+    val context = LocalContext.current
+
+    if(axis)
+        ElevatedCard(
+            modifier = Modifier
+                .width(180.dp)
+                .height(200.dp)
+                .padding(8.dp)
+                .clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(news.link))
+                    context.startActivity(intent)
+                },
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+            colors = CardDefaults.cardColors(Color.White)
+        ) {
+            Column {
+                AsyncImage(
+                    model = news.imageUrl,
+                    contentDescription = "News Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp), // Image size
+                    contentScale = ContentScale.Crop
+                )
+
+                Column(modifier = Modifier.padding(8.dp)) {
+                    androidx.compose.material3.Text(
+                        text = news.title,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    androidx.compose.material3.Text(
+                        text = news.date,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                }
+            }
+        }
+    else
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .padding(8.dp)
+                .clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(news.link))
+                    context.startActivity(intent)
+                },
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+            colors = CardDefaults.cardColors(Color.White)
+        ) {
+            Row {
+                AsyncImage(
+                    model = news.imageUrl,
+                    contentDescription = "News Image",
+                    modifier = Modifier
+                        .width(100.dp)
+                        .fillMaxHeight(),
+                    contentScale = ContentScale.Crop
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)
+                    ) {
+                        Text(
+                            text = news.title,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = news.date,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.Gray
+                        )
+                    }
+
+                    if (editDelete) {
+                        Row {
+                            IconButton(onClick = onEditNews) {
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = "Edit News",
+                                    tint = Color(0xFF426193)
+                                )
+                            }
+                            IconButton(onClick = onDeleteNews) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "Delete News",
+                                    tint = Color(0xFFE55304)
+                                )
+                            }
+                        }
+                    } else {
+                        IconButton(onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(news.link))
+                            context.startActivity(intent)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowForwardIos,
+                                contentDescription = "Open News",
+                                tint = Color(0xFF426193)
+                            )
+                        }
+                    }
+                }
+
+            }
+        }
+}
+
+@Composable
+fun TeachingCard(
+    teaching: Teaching,
+    modifier: Modifier = Modifier
 ){
     val context = LocalContext.current
     ElevatedCard(
-        modifier = Modifier
-            .width(180.dp)
-            .height(200.dp)
-            .padding(8.dp)
-            .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(news.link))
-                context.startActivity(intent)
-            },
+        modifier = modifier
+            .padding(8.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(Color.White)
     ) {
-        Column {
-            AsyncImage(
-                model = news.imageUrl,
-                contentDescription = "News Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp), // Image size
-                contentScale = ContentScale.Crop
+        Column(modifier = Modifier.padding(12.dp)) {
+            androidx.compose.material3.Text(
+                text = teaching.title,
+                fontWeight = FontWeight.Bold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
-
-            Column(modifier = Modifier.padding(8.dp)) {
-                androidx.compose.material3.Text(
-                    text = news.title,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                androidx.compose.material3.Text(
-                    text = news.date,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
-            }
+            Spacer(modifier = Modifier.height(4.dp))
+            androidx.compose.material3.Text(
+                text = "Semester " + teaching.semester + " - " + teaching.year,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -867,7 +1082,7 @@ fun FacilitiesCard(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                if(facilities.link.isNotEmpty()){
+                if (facilities.link.isNotEmpty()) {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(facilities.link))
                     context.startActivity(intent)
                 }
@@ -915,7 +1130,7 @@ fun TabSection(selectedTab: String, onTabSelected: (String) -> Unit) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                listOf("Artikel", "Publikasi", "Pengabdian").forEach { tab ->
+                listOf("Penelitian", "Pengabdian", "Pengajaran").forEach { tab ->
                     Button(
                         onClick = { onTabSelected(tab) },
                         colors = ButtonDefaults.buttonColors(
@@ -960,17 +1175,17 @@ fun ArtikelContent(articles: List<Article>) {
 }
 
 @Composable
-fun PublikasiContent(publications: List<Article>) {
+fun PengajaranContent(teachings: List<Teaching>) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(400.dp)
     ) {
-        if (publications.isEmpty()) {
-            Text("Publikasi tidak tersedia", modifier = Modifier.padding(16.dp))
+        if (teachings.isEmpty()) {
+            Text("Pengajaran tidak tersedia", modifier = Modifier.padding(16.dp))
         } else {
             LazyColumn {
-                items(publications) { publications ->
-                    ArticleCard(publications, modifier = Modifier
+                items(teachings) { teaching ->
+                    TeachingCard(teaching, modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp))
                 }
@@ -998,3 +1213,171 @@ fun PengabdianContent(devotions: List<Devotion>) {
         }
     }
 }
+
+@Composable
+fun CardMenu(modifier: Modifier = Modifier, text: String, icon: ImageVector,onClick: () -> Unit) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .shadow(8.dp, shape = RoundedCornerShape(8.dp)) // Shadow tetap ada
+            .clip(RoundedCornerShape(8.dp)) // Clip agar background mengikuti shape
+            .background(Color.White) // Background mengikuti clip
+            .padding(10.dp) // Tambahkan padding agar konten tidak menempel
+            .clickable { onClick() }
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    modifier = Modifier.size(35.dp),
+                    imageVector = icon,
+                    contentDescription = "Icon $text",
+                    tint = Color(0xff093376)
+                )
+                Spacer(Modifier.width(10.dp))
+                androidx.compose.material3.Text(
+                    text,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    color = Color(0xff093376)
+                )
+            }
+            Icon(
+                modifier = Modifier.size(16.dp),
+                imageVector = Icons.Default.ArrowForwardIos,
+                contentDescription = "Icon Arrow Right",
+                tint = Color(0xff093376)
+            )
+
+        }
+    }
+}
+
+@Composable
+fun LogoutConfirmationDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Confirm Logout", color = Color(0xFFF37619), fontWeight = FontWeight.Bold) },
+        text = { Text("Are you sure you want to log out?") },
+        confirmButton = {
+            Button(onClick = onConfirm, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))) {
+                Text("Yes", color = Color.White)
+            }
+        },
+        dismissButton = {
+            OutlinedButton(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = Color.White)) {
+                Text("Cancel")
+            }
+        },
+        containerColor = Color.White
+    )
+}
+
+@Composable
+fun DatePickerDialogExample(selectedDate: String, onDateSelected: (String) -> Unit) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        R.style.CustomDatePickerDialog,
+        { _, selectedYear, selectedMonth, selectedDay ->
+            val formattedDate = String.format("%02d-%02d-%04d", selectedDay, selectedMonth + 1, selectedYear)
+            onDateSelected(formattedDate)
+        },
+        year, month, day
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { datePickerDialog.show() }
+    ) {
+        OutlinedTextField(
+            value = selectedDate,
+            onValueChange = {},
+            label = {
+                Text(if (selectedDate.isEmpty()) "Select Date" else "Date")
+            },
+            readOnly = true,
+            enabled = false,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { datePickerDialog.show() },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = "Pick date"
+                )
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color.Gray,
+                focusedBorderColor = Color(0xFF10375E),
+                cursorColor = Color.Transparent,
+                disabledTextColor = Color.Black
+            )
+        )
+    }
+}
+
+@Composable
+fun TimePickerDialogExample(selectedTime: String, onTimeSelected: (String) -> Unit) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    val timePickerDialog = TimePickerDialog(
+        context,
+        R.style.CustomTimePickerDialog,
+        { _, selectedHour, selectedMinute ->
+            val formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
+            onTimeSelected(formattedTime)
+        },
+        hour, minute, true
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { timePickerDialog.show() }
+    ) {
+        OutlinedTextField(
+            value = selectedTime,
+            onValueChange = {},
+            label = {
+                Text(if (selectedTime.isEmpty()) "Select Time" else "Time")
+            },
+            readOnly = true,
+            enabled = false,
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.AccessTime,
+                    contentDescription = "Pick time"
+                )
+            },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color.Gray,
+                focusedBorderColor = Color(0xFF10375E),
+                cursorColor = Color.Transparent,
+                disabledTextColor = Color.Black
+            )
+        )
+    }
+}
+
+
+
+

@@ -82,7 +82,8 @@ fun FacilitiesAdminScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onClickAdd() },
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = Color(0xFF10375E),
+                contentColor = Color.White
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Facility")
             }

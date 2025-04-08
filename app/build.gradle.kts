@@ -68,9 +68,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
-    implementation("androidx.room:room-runtime:2.5.0")
-    kapt("androidx.room:room-compiler:2.5.0")
-    implementation("androidx.room:room-ktx:2.5.0")
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.compose.material:material-icons-extended:1.7.6")
     implementation("androidx.compose.material:material-icons-core:1.7.6")
     implementation("androidx.camera:camera-core:1.1.0")
@@ -82,6 +82,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:0.31.3-beta")
     implementation("androidx.compose.foundation:foundation:1.6.0")
     implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("com.google.android.material:material:1.11.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -100,6 +101,7 @@ dependencies {
 }
 
 apply(plugin = "com.google.gms.google-services")
+apply(plugin = "kotlin-kapt")
 
 kapt {
     correctErrorTypes = true

@@ -171,7 +171,8 @@ fun AddEditLeaderScreen(
                     Button(
                         onClick = { saveLeader() },
                         modifier = Modifier.fillMaxWidth().height(50.dp),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10375E))
                     ) {
                         Text("Save", fontWeight = FontWeight.Bold)
                     }

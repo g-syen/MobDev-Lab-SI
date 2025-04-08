@@ -53,6 +53,7 @@ import com.example.studentemployee.components.BottomNavBarAdmin
 import com.example.studentemployee.data.Event
 import com.example.studentemployee.components.EventCard
 import com.example.studentemployee.components.FeatureItem
+import com.example.studentemployee.components.LogoutConfirmationDialog
 import com.example.studentemployee.data.News
 import com.example.studentemployee.components.NewsCard
 import com.google.firebase.auth.FirebaseAuth
@@ -81,6 +82,7 @@ fun HomepageAdminScreen(
     var articles by remember { mutableStateOf<List<Article>>(emptyList()) }
     var journals by remember { mutableStateOf<List<Article>>(emptyList()) }
     val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    var showLogoutDialog by remember { mutableStateOf(false) }
     val email = currentUser?.email
 
     LaunchedEffect(Unit) {
@@ -127,7 +129,7 @@ fun HomepageAdminScreen(
                         horizontalArrangement = Arrangement.Start
                     ) {
                         IconButton(
-                            onClick = { onClickLogin() },
+                            onClick = { showLogoutDialog = true },
                             modifier = Modifier
                                 .padding(end = 8.dp)
                                 .clip(RoundedCornerShape(8.dp))
@@ -171,6 +173,12 @@ fun HomepageAdminScreen(
         bottomBar = { BottomNavBarAdmin(navController) },
         containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
+        if (showLogoutDialog) {
+            LogoutConfirmationDialog(
+                onConfirm = onClickLogin,
+                onDismiss = { showLogoutDialog = false }
+            )
+        }
         Column(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
@@ -180,6 +188,7 @@ fun HomepageAdminScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment =  Alignment.Start
         ){
+
             Spacer(modifier = Modifier.height(16.dp))
             Box (
                 modifier = Modifier
@@ -238,7 +247,7 @@ fun HomepageAdminScreen(
 
             LazyRow {
                 items(events) { event ->
-                    EventCard(event)
+                    EventCard(event, true)
                 }
             }
 
@@ -275,7 +284,7 @@ fun HomepageAdminScreen(
 
             LazyRow {
                 items(news) { news ->
-                    NewsCard(news)
+                    NewsCard(news, true)
                 }
             }
 

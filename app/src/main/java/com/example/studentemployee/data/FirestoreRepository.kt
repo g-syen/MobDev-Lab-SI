@@ -116,6 +116,88 @@ class FirestoreRepository {
             .set(data)
     }
 
+    fun getAllNews(): Flow<List<News>> = callbackFlow {
+        val listener = db.collection("news")
+            .addSnapshotListener { snapshot, error ->
+                if(error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if(snapshot!=null) {
+                    val news =
+                        snapshot.documents.mapNotNull { it.toObject(News::class.java) }
+                    trySend(news).isSuccess
+                }
+            }
+
+        awaitClose { listener.remove() }
+    }
+
+    fun addNews(news: News): Task<Void> {
+        val docRef = db
+            .collection("news")
+            .document()
+        val newsWithId = news.copy(id = docRef.id)
+
+        return docRef.set(newsWithId)
+    }
+
+    fun updateNews(news: News): Task<Void> {
+        return db
+            .collection("news")
+            .document(news.id).set(news)
+    }
+
+    fun deleteNews(newsId: String, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+        db.collection("news")
+            .document(newsId)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
+
+    fun getAllEvents(): Flow<List<Event>> = callbackFlow {
+        val listener = db.collection("events")
+            .addSnapshotListener { snapshot, error ->
+                if(error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if(snapshot!=null) {
+                    val events =
+                        snapshot.documents.mapNotNull { it.toObject(Event::class.java) }
+                    trySend(events).isSuccess
+                }
+            }
+
+        awaitClose { listener.remove() }
+    }
+
+    fun addEvent(event: Event): Task<Void> {
+        val docRef = db
+            .collection("events")
+            .document()
+        val eventWithId = event.copy(id = docRef.id)
+
+        return docRef.set(eventWithId)
+    }
+
+    fun updateEvent(event: Event): Task<Void> {
+        return db
+            .collection("events")
+            .document(event.id).set(event)
+    }
+
+    fun deleteEvent(eventId: String, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+        db.collection("events")
+            .document(eventId)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
+
     fun getUserArticles(userId: String): Flow<List<Article>> = callbackFlow {
         val listener = db.collection("users")
             .document(userId)

@@ -62,12 +62,13 @@ import com.example.studentemployee.components.ArtikelContent
 import com.example.studentemployee.components.FacilitiesCard
 import com.example.studentemployee.components.ImageCarousel
 import com.example.studentemployee.components.PengabdianContent
-import com.example.studentemployee.components.PublikasiContent
+import com.example.studentemployee.components.PengajaranContent
 import com.example.studentemployee.components.TabSection
 import com.example.studentemployee.data.Article
 import com.example.studentemployee.data.Devotion
 import com.example.studentemployee.data.Facilities
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.studentemployee.data.Teaching
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,7 +82,7 @@ fun PersonalMemberScreen(
     var profileImageUrl by remember { mutableStateOf("") }
     var specialist by remember { mutableStateOf("") }
     var articles by remember { mutableStateOf<List<Article>>(emptyList()) }
-    var publications by remember { mutableStateOf<List<Article>>(emptyList()) }
+    var teachings by remember { mutableStateOf<List<Teaching>>(emptyList()) }
     var devotions by remember { mutableStateOf<List<Devotion>>(emptyList()) }
     var biography by remember { mutableStateOf("") }
     var socialLinks by remember { mutableStateOf<Map<String, String>>(emptyMap()) }
@@ -136,11 +137,11 @@ fun PersonalMemberScreen(
                     Log.e("Firestore", "Error getting documents", it)
                 }
 
-            userRef.collection("publications")
+            userRef.collection("teachings")
                 .get()
                 .addOnSuccessListener { result ->
-                    val newPublications = result.documents.mapNotNull { it.toObject(Article::class.java) }
-                    publications = newPublications
+                    val newTeachings = result.documents.mapNotNull { it.toObject(Teaching::class.java) }
+                    teachings = newTeachings
                 }
                 .addOnFailureListener{
                     Log.e("Firestore", "Error getting documents", it)
@@ -280,7 +281,7 @@ fun PersonalMemberScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .height(400.dp),  // Set fixed height
+                    .height(400.dp),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.elevatedCardElevation(4.dp),
                 colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
@@ -323,9 +324,9 @@ fun PersonalMemberScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             when (selectedTab) {
-                "Artikel" -> ArtikelContent(articles)
-                "Publikasi" -> PublikasiContent(publications)
+                "Penelitian" -> ArtikelContent(articles)
                 "Pengabdian" -> PengabdianContent(devotions)
+                "Pengajaran" -> PengajaranContent(teachings)
             }
 
 

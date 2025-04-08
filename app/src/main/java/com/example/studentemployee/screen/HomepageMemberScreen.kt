@@ -64,6 +64,7 @@ import com.example.studentemployee.components.FeatureItem
 import com.example.studentemployee.data.News
 import com.example.studentemployee.components.NewsCard
 import com.example.studentemployee.components.BottomNavBarMember
+import com.example.studentemployee.components.LogoutConfirmationDialog
 import com.example.studentemployee.data.BottomNavItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -90,6 +91,7 @@ fun HomepageMemberScreen(
     var articles by remember { mutableStateOf<List<Article>>(emptyList()) }
     var journals by remember { mutableStateOf<List<Article>>(emptyList()) }
     val currentUser : FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    var showLogoutDialog by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf<String>("") }
 
     LaunchedEffect(Unit) {
@@ -150,7 +152,7 @@ fun HomepageMemberScreen(
                         horizontalArrangement = Arrangement.Start
                     ) {
                         IconButton(
-                            onClick = { onClickLogin() },
+                            onClick = { showLogoutDialog = true },
                             modifier = Modifier
                                 .padding(end = 8.dp)
                                 .clip(RoundedCornerShape(8.dp))
@@ -194,6 +196,12 @@ fun HomepageMemberScreen(
         bottomBar = { BottomNavBarMember(navController) },
         containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
+        if (showLogoutDialog) {
+            LogoutConfirmationDialog(
+                onConfirm = onClickLogin,
+                onDismiss = { showLogoutDialog = false }
+            )
+        }
         Column(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
@@ -261,7 +269,7 @@ fun HomepageMemberScreen(
 
             LazyRow {
                 items(events) { event ->
-                    EventCard(event)
+                    EventCard(event, true)
                 }
             }
 
@@ -298,7 +306,7 @@ fun HomepageMemberScreen(
 
             LazyRow {
                 items(news) { news ->
-                    NewsCard(news)
+                    NewsCard(news, true)
                 }
             }
 

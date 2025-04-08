@@ -10,6 +10,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import com.example.studentemployee.ui.theme.StudentEmployeeTheme
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +29,7 @@ import androidx.navigation.NavController
 import com.example.studentemployee.screen.*
 import com.example.studentemployee.viewmodel.LeaderViewModel
 import com.example.studentemployee.viewmodel.MemberViewModel
+import com.example.studentemployee.viewmodel.SearchViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 
@@ -34,18 +37,12 @@ class MainActivity : ComponentActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
 
-    //    private lateinit var imageDao: ImageDao
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
         enableEdgeToEdge()
         firestore = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
-//        val db = Room.databaseBuilder(
-//            applicationContext,
-//            AppDatabase::class.java, "travelupa-database"
-//        ).build()
-//        imageDao = db.imageDao()
         val currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         setContent {
             StudentEmployeeTheme {
@@ -77,11 +74,12 @@ sealed class Screen(val route: String) {
     object Journals : Screen("journals")
     object Content : Screen("content")
     object Menu : Screen("menu")
-    object Search : Screen("search")
+    object SearchGuest : Screen("searchguest")
 
     object Profile : Screen("profile")
     object MenuMember : Screen("menumember")
     object PersonalMember : Screen("personalmember")
+    object SearchMember : Screen("searchmember")
     object EditProfile:Screen("editprofile")
     object AddEditResearch:Screen("addeditresearch")
     object AddEditDevotion:Screen("addeditdevotion")
@@ -95,6 +93,10 @@ sealed class Screen(val route: String) {
     object MemberAdmin : Screen("memberadmin")
     object AddEditLeader : Screen("addeditleader")
     object LeadershipAdmin : Screen("leadershipadmin")
+    object MenuAdmin : Screen("menuadmin")
+    object AddEditEvent : Screen("addeditevent")
+    object AddEditNews : Screen("addeditnews")
+    object SearchAdmin : Screen("searchadmin")
 
 }
 
@@ -262,16 +264,27 @@ fun AppNavigation(
             EditProfileScreen(navController = navController)
         }
 
-        composable(Screen.Menu.route) {
-            MenuScreen()
-        }
-
         composable(Screen.MenuMember.route) {
-            MenuMemberScreen(navController = navController)
+            MenuMemberScreen(
+                navController = navController,
+                onClickLogin = {
+                    FirebaseAuth.getInstance().signOut()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.MenuMember.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
 
-        composable(Screen.Search.route){
-            SearchScreen()
+        composable(Screen.SearchMember.route){
+            val viewModel: SearchViewModel = viewModel()
+            SearchMemberScreen(
+                firestore = firestore,
+                navController = navController,
+                viewModel = viewModel
+                )
         }
 
         composable(Screen.AddEditResearch.route){
@@ -420,6 +433,66 @@ fun AppNavigation(
             )
         }
 
+
+        composable(Screen.AddEditEvent.route){
+            AddEditEventScreen(firestore = firestore, navController = navController, eventId = null)
+        }
+
+        composable("addeditevent/{eventId}") { backStackEntry ->
+            val eventId = backStackEntry.arguments?.getString("eventId")
+            AddEditEventScreen(
+                firestore = firestore,
+                navController = navController,
+                eventId = eventId
+            )
+        }
+
+        composable(Screen.AddEditNews.route) {
+            AddEditNewsScreen(firestore = firestore, navController = navController, newsId = null)
+        }
+
+        composable("addeditnews/{newsId}") { backStackEntry ->
+            val newsId = backStackEntry.arguments?.getString("newsId")
+            AddEditNewsScreen(
+                firestore = firestore,
+                navController = navController,
+                newsId = newsId
+            )
+        }
+
+        composable(Screen.MenuAdmin.route){
+            MenuAdminScreen(
+                navController = navController,
+                onClickAddEvent = {
+                    navController.navigate(Screen.AddEditEvent.route) {
+                        popUpTo(Screen.MenuAdmin.route) { inclusive = false }
+                    }
+                },
+                onClickAddNews = {
+                    navController.navigate(Screen.AddEditNews.route) {
+                        popUpTo(Screen.MenuAdmin.route) { inclusive = false }
+                    }
+                },
+                onClickLogin = {
+                    FirebaseAuth.getInstance().signOut()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.MenuAdmin.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
+
+        composable(Screen.SearchAdmin.route){
+            val viewModel: SearchViewModel = viewModel()
+            SearchAdminScreen(
+                firestore = firestore,
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+
         composable(Screen.HomepageMember.route) {
             HomepageMemberScreen(
                 firestore = firestore,
@@ -502,16 +575,16 @@ fun AppNavigation(
             )
         }
 
+        composable(Screen.SearchGuest.route){
+            val viewModel: SearchViewModel = viewModel()
+            SearchGuestScreen(
+                firestore = firestore,
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+
     }
-}
-
-
-
-@Composable
-fun MenuScreen(
-
-) {
-    Text(text = "Menu Menu")
 }
 
 
@@ -558,10 +631,7 @@ fun ContentScreen(
     Text(text = "Content")
 }
 
-@Composable
-fun SearchScreen(modifier: Modifier = Modifier) {
-    Text(text = "Search")
-}
+
 
 @Composable
 fun AddEditDevotionScreen(modifier: Modifier = Modifier,navController: NavController) {

@@ -63,7 +63,6 @@ import androidx.core.net.toUri
 import com.example.studentemployee.Screen
 import com.example.studentemployee.components.ArtikelContent
 import com.example.studentemployee.components.PengabdianContent
-import com.example.studentemployee.components.PublikasiContent
 import com.example.studentemployee.components.TabSection
 
 

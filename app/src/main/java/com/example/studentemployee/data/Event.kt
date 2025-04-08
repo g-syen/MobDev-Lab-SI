@@ -1,9 +1,10 @@
 package com.example.studentemployee.data
 
 data class Event(
-    val title: String = "",
+    override val title: String = "",
+    var id: String = "",
     val date: String = "",
     val time: String = "",
     val imageUrl: String = "",
     val link: String = ""
-)
+) : HasTitle
