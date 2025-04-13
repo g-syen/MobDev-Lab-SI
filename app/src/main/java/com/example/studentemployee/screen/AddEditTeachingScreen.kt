@@ -1,37 +1,37 @@
 package com.example.studentemployee.screen
 
-import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,87 +53,105 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.studentemployee.Screen
-import com.example.studentemployee.components.ArtikelContent
 import com.example.studentemployee.components.RoundedCard
 import com.example.studentemployee.components.TopAppBarMenu
-import com.example.studentemployee.data.Article
 import com.example.studentemployee.data.Research
-import com.example.studentemployee.viewmodel.ProfileViewModel
-import com.example.studentemployee.viewmodel.ResearchViewModel
+import com.example.studentemployee.data.Teaching
+import com.example.studentemployee.viewmodel.TeachingViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun AddEditResearchScreen(
+fun AddEditTeachingScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: ResearchViewModel = viewModel(),
+    viewModel: TeachingViewModel = viewModel(),
 ) {
-    val userResearches by viewModel.researches.collectAsState()
+    val userTeachings by viewModel.teachings.collectAsState()
     val userId = FirebaseAuth.getInstance().currentUser?.uid
-    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         if (userId != null) {
-            viewModel.loadUserResearches(userId)
+            viewModel.loadUserTeachings(userId)
         }
     }
 
-    var researchTitle by remember { mutableStateOf("") }
-    var researchAuthor by remember { mutableStateOf("") }
-    var researchUrl by remember { mutableStateOf("") }
-    var articles by remember { mutableStateOf<List<Article>>(emptyList()) }
+    var teachingTitle by remember { mutableStateOf("") }
+    var teachingClassName by remember { mutableStateOf("") }
+    var teachingSemester by remember { mutableStateOf("") }
+    var teachingYear by remember { mutableStateOf("") }
+    var selectedTeaching by remember { mutableStateOf<Teaching?>(null) }
+
     var isEdit by remember { mutableStateOf(false) }
-    var selectedResearch by remember { mutableStateOf<Research?>(null) }
+    val context = LocalContext.current
 
     var titleError by remember { mutableStateOf(false) }
-    var authorError by remember { mutableStateOf(false) }
-    var urlError by remember { mutableStateOf(false) }
+    var classNameError by remember { mutableStateOf(false) }
+    var semesterError by remember { mutableStateOf(false) }
+    var yearError by remember { mutableStateOf(false) }
 
-    LaunchedEffect(selectedResearch) {
-        selectedResearch?.let {
-            researchTitle = it.title
-            researchAuthor = it.authors
-            researchUrl = it.link
+    LaunchedEffect(selectedTeaching) {
+        selectedTeaching?.let {
+            teachingTitle = it.title
+            teachingClassName = it.classname
+            teachingSemester = it.semester
+            teachingYear = it.year
         }
     }
 
+
     fun clearField() {
-        researchTitle = ""
-        researchAuthor = ""
-        researchUrl = ""
-        selectedResearch = null
+        teachingTitle = ""
+        teachingClassName = ""
+        teachingSemester = ""
+        teachingYear = ""
+        selectedTeaching = null
         isEdit = false
     }
 
-    fun isValidUrl(url: String): Boolean {
-        return url.startsWith("http://") || url.startsWith("https://")
-    }
 
-    articles = listOf(
-        Article(
-            title = "Implementasi Machine Learning untuk Prediksi Penyakit pada Data Medis",
-            authors = "Dewi Kartika, S.Kom., M.Sc.; Andi Susanto, M.T.",
-            link = "https://ieee.com/"
+    val dummyTeachings = listOf(
+        Teaching(
+            id = "1",
+            title = "Pemrograman Mobile Lanjut",
+            classname = "TIF-A",
+            semester = "Genap",
+            year = "2023"
         ),
-        Article(
-            title = "Analisis Sentimen di Media Sosial Menggunakan Deep Learning",
-            authors = "Budi Hartono, Ph.D.; Dewi Kartika, S.Kom., M.Sc.",
-            link = "https://ieee.com/"
+        Teaching(
+            id = "2",
+            title = "Rekayasa Perangkat Lunak",
+            classname = "TIF-B",
+            semester = "Ganjil",
+            year = "2022"
         ),
-        Article(
-            title = "Pengembangan Sistem Rekomendasi Makanan Bergizi Berbasis Preferensi Anak",
-            authors = "Dewi Kartika, S.Kom., M.Sc.",
-            link = "https://ieee.com/"
+        Teaching(
+            id = "3",
+            title = "Manajemen Proyek TI",
+            classname = "TIF-C",
+            semester = "Genap",
+            year = "2024"
+        ),
+        Teaching(
+            id = "4",
+            title = "Dasar Pemrograman",
+            classname = "TIF-A",
+            semester = "Ganjil",
+            year = "2021"
+        ),
+        Teaching(
+            id = "5",
+            title = "Sistem Operasi",
+            classname = "TIF-D",
+            semester = "Genap",
+            year = "2023"
         )
     )
-
 
     Scaffold(
         topBar = {
             TopAppBarMenu(
                 onClick = { navController.navigateUp() },
-                text = "Tambah & Edit Penelitian"
+                text = "Tambah & Edit Pengajaran"
             )
         },
         containerColor = Color(0xFFF9F9F9)
@@ -151,47 +170,42 @@ fun AddEditResearchScreen(
 
                 ) {
                     Text(
-                        "Tambahkan / Edit Penelitian",
+                        "Tambahkan / Edit Pengajaran",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0XFFF37619)
                     )
                     CustomDivider()
                     CustomTextField(
-                        value = researchTitle,
-                        onValueChange = { researchTitle = it },
-                        label = "Masukkan Judul Penelitian"
+                        value = teachingTitle,
+                        onValueChange = { teachingTitle = it },
+                        label = "Masukkan Nama Mata Kuliah"
                     )
                     CustomTextField(
-                        value = researchAuthor,
-                        onValueChange = { researchAuthor = it },
-                        label = "Masukkan Penulis Penelitian"
+                        value = teachingClassName,
+                        onValueChange = { teachingClassName = it },
+                        label = "Masukkan Nama Kelas (ex: SI-A)"
+                    )
+                    SemesterDropdown(
+                        selectedSemester = teachingSemester,
+                        onSemesterSelected = { teachingSemester = it }
                     )
                     CustomTextField(
-                        value = researchUrl,
-                        onValueChange = {
-                            researchUrl = it
-                            urlError = false
-                        },
-                        label = "Masukkan Link Penelitian",
-                        isError = urlError,
-                        supportingText = {
-                            if (urlError) Text(
-                                "Link harus dimulai dengan http:// atau https://",
-                                color = Color.Red
-                            )
-                        }
+                        value = teachingYear,
+                        onValueChange = { teachingYear = it },
+                        label = "Masukkan Tahun Ajar (ex: 2024/2025)"
                     )
                     Spacer(Modifier.height(8.dp))
                     CustomButton(
+                        text = if (isEdit) "Edit Pengajaran" else "Simpan Pengajaran",
                         onClick = {
-                            titleError = researchTitle.isBlank()
-                            authorError = researchAuthor.isBlank()
-                            urlError =
-                                researchUrl.isBlank() || !isValidUrl(researchUrl)
+                            titleError = teachingTitle.isBlank()
+                            classNameError = teachingClassName.isBlank()
+                            semesterError = teachingSemester.isBlank()
+                            yearError = teachingYear.isBlank()
 
                             if (userId != null) {
-                                if (titleError || authorError || urlError) {
+                                if (titleError || classNameError || semesterError || yearError) {
                                     Toast.makeText(
                                         context,
                                         "Mohon lengkapi semua field dengan benar.",
@@ -200,15 +214,15 @@ fun AddEditResearchScreen(
                                     return@CustomButton
                                 }
                                 if (!isEdit) {
-                                    //add new research
-                                    val newResearch = Research(
-                                        title = researchTitle,
-                                        authors = researchAuthor,
-                                        link = researchUrl
+                                    val newTeaching = Teaching(
+                                        title = teachingTitle,
+                                        classname = teachingClassName,
+                                        semester = teachingSemester,
+                                        year = teachingYear
                                     )
-                                    viewModel.addResearch(
-                                        userId,
-                                        newResearch,
+                                    viewModel.addTeaching(
+                                        userId = userId,
+                                        teaching = newTeaching,
                                         onSuccess = {
                                             Toast.makeText(
                                                 context,
@@ -226,15 +240,16 @@ fun AddEditResearchScreen(
                                         }
                                     )
                                 } else {
-                                    val updatedResearch = Research(
-                                        id = selectedResearch?.id ?: "",
-                                        title = researchTitle,
-                                        authors = researchAuthor,
-                                        link = researchUrl,
+                                    val updatedTeaching = Teaching(
+                                        id = selectedTeaching?.id ?: "",
+                                        title = teachingTitle,
+                                        classname = teachingClassName,
+                                        semester = teachingSemester,
+                                        year = teachingYear
                                     )
-                                    viewModel.updateResearch(
+                                    viewModel.updateTeaching(
                                         userId = userId,
-                                        research = updatedResearch,
+                                        teaching = updatedTeaching,
                                         onSuccess = {
                                             Toast.makeText(
                                                 context,
@@ -254,31 +269,30 @@ fun AddEditResearchScreen(
                                 }
                             }
                         },
-                        text = if (isEdit) "Edit Penelitian" else "Simpan Penelitian"
+
                     )
                 }
             }
             Text(
-                "Penelitian yang telah diunggah",
+                "Pengajaran yang telah diunggah",
                 modifier = modifier.padding(start = 24.dp),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0XFFF37619)
             )
-
             LazyColumn(modifier = modifier.padding(horizontal = 24.dp)) {
-                items(userResearches) { research ->
-                    ResearchCard(
-                        research = research,
-                        onEditResearch = {
-                            selectedResearch = research
+                items(userTeachings) { teaching ->
+                    TeachingCard(
+                        teaching = teaching,
+                        onEditTeaching = {
+                            selectedTeaching = teaching
                             isEdit = true
                         },
-                        onDeleteResearch = {
-                            if (userId != null && research.id.isNotEmpty()) {
-                                viewModel.deleteResearch(
+                        onDeleteTeaching = {
+                            if (userId != null && teaching.id.isNotEmpty()) {
+                                viewModel.deleteTeaching(
                                     userId = userId,
-                                    researchId = research.id,
+                                    teachingId = teaching.id,
                                     onSuccess = {
                                         clearField()
                                         Toast.makeText(
@@ -304,29 +318,24 @@ fun AddEditResearchScreen(
     }
 }
 
+
 @Preview
 @Composable
-private fun AddEditResearchScreenPreview() {
-    AddEditResearchScreen(navController = rememberNavController())
+private fun AddEditTeachingScreenPreview() {
+    AddEditTeachingScreen(navController = rememberNavController())
 }
 
 @Composable
-fun ResearchCard(
-    research: Research,
+fun TeachingCard(
+    teaching: Teaching,
     modifier: Modifier = Modifier,
-    onEditResearch: () -> Unit,
-    onDeleteResearch: () -> Unit
+    onEditTeaching: () -> Unit,
+    onDeleteTeaching: () -> Unit
 
 ) {
-    val context = LocalContext.current
     ElevatedCard(
         modifier = modifier
-            .padding(vertical = 8.dp)
-            .clickable {
-                val intent =
-                    Intent(Intent.ACTION_VIEW, Uri.parse(research.link))
-                context.startActivity(intent)
-            },
+            .padding(vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(Color.White)
@@ -343,14 +352,14 @@ fun ResearchCard(
                     .padding(8.dp)
             ) {
                 Text(
-                    text = research.title,
+                    text = teaching.title,
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = research.authors,
+                    text = "${teaching.classname} | ${teaching.semester} ${teaching.year}",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray,
                     maxLines = 1,
@@ -359,15 +368,16 @@ fun ResearchCard(
                 )
             }
 
-            Row{
-                IconButton(onClick = onEditResearch) {
+            Row(
+            ) {
+                IconButton(onClick = onEditTeaching) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
                         contentDescription = "Edit Research Icon",
                         tint = Color(0xFF426193) // contoh warna biru untuk edit
                     )
                 }
-                IconButton(onClick = onDeleteResearch) {
+                IconButton(onClick = onDeleteTeaching) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
                         contentDescription = "Delete Research Icon",
@@ -381,14 +391,94 @@ fun ResearchCard(
 
 @Preview
 @Composable
-private fun ResearchCardPreview() {
-    ResearchCard(
-        research = Research(
-            title = "Penerapan Deep Learning untuk Deteksi Dini Penyakit Paru-paru Berdasarkan Citra X-ray Menggunakan CNN",
-            authors = "Dewi Kartika, S.Kom., M.Sc.; Andi Susanto, M.T.",
-            link = "https://example.com/article1"
+private fun TeachingCardPreview() {
+    TeachingCard(
+        teaching = Teaching(
+            id = "",
+            title = "Teknologi Blockchain dan Platform keuangan dijital",
+            classname = "TIF-B",
+            semester = "Genap",
+            year = "2024/2025"
         ),
-        onEditResearch = {},
-        onDeleteResearch = {}
+        onEditTeaching = {},
+        onDeleteTeaching = {}
     )
+}
+
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun SemesterDropdown(
+    selectedSemester: String,
+    onSemesterSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val list = listOf("Ganjil", "Genap")
+    var isExpanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ExposedDropdownMenuBox(
+            modifier = modifier.fillMaxWidth(),
+            expanded = isExpanded,
+            onExpandedChange = { isExpanded = !isExpanded }
+        ) {
+            TextField(
+                modifier = modifier.fillMaxWidth(),
+                value = selectedSemester,
+                onValueChange = {},
+                label = {
+                    Text(
+                        "Masukkan Semester Pengajaran",
+                        color = Color(0xFFE2640D),
+                        fontSize = 13.sp
+                    )
+                },
+                readOnly = true,
+                textStyle = TextStyle(
+                    color = Color(0xFF195693),
+                    fontSize = 16.sp
+                ),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color(0XFFF9F9F9),
+                    cursorColor = Color(0xFF195693),
+                    focusedIndicatorColor = Color(0XFF195693),
+                    unfocusedIndicatorColor = Color(0XFF195693)
+                ),
+                trailingIcon = {
+                    Icon(
+                        imageVector = if (isExpanded) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
+                        contentDescription = "Dropdown Icon",
+                        tint = Color(0xFF195693)
+                    )
+                }
+            )
+
+            DropdownMenu(
+                modifier = modifier
+                    .background(Color.White)
+                    .exposedDropdownSize(),
+                expanded = isExpanded,
+                onDismissRequest = { isExpanded = false }
+            ) {
+                list.forEach { option ->
+                    DropdownMenuItem(
+                        modifier = modifier.fillMaxWidth(),
+                        text = {
+                            Text(
+                                text = option,
+                                color = Color(0xFF195693)
+                            )
+                        },
+                        onClick = {
+                            onSemesterSelected(option)
+                            isExpanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
 }

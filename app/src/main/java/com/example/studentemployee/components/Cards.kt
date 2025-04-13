@@ -5,7 +5,6 @@ import android.app.TimePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import android.widget.Space
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,13 +20,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -60,7 +56,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedButton
@@ -103,6 +98,7 @@ import com.example.studentemployee.data.Devotion
 import com.example.studentemployee.data.Event
 import com.example.studentemployee.data.Facilities
 import com.example.studentemployee.data.News
+import com.example.studentemployee.data.Research
 import com.example.studentemployee.data.Teaching
 import com.example.studentemployee.data.User
 import java.util.Calendar
@@ -1037,6 +1033,42 @@ fun ArticleCard(
 }
 
 @Composable
+fun ResearchCard(
+    research: Research,
+    modifier: Modifier = Modifier
+){
+    val context = LocalContext.current
+    ElevatedCard(
+        modifier = modifier
+            .padding(8.dp)
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(research.link))
+                context.startActivity(intent)
+            },
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(Color.White)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            androidx.compose.material3.Text(
+                text = research.title,
+                fontWeight = FontWeight.Bold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            androidx.compose.material3.Text(
+                text = research.authors,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
 fun DevotionCard(
     devotion: Devotion,
     modifier: Modifier = Modifier
@@ -1062,7 +1094,7 @@ fun DevotionCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             androidx.compose.material3.Text(
-                text = devotion.description,
+                text = devotion.contributors,
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 maxLines = 2,
@@ -1173,6 +1205,27 @@ fun ArtikelContent(articles: List<Article>) {
         }
     }
 }
+
+@Composable
+fun PenelitianContent(researches: List<Research>) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(400.dp)
+    ) {
+        if (researches.isEmpty()) {
+            Text("Penelitian tidak tersedia", modifier = Modifier.padding(16.dp))
+        } else {
+            LazyColumn {
+                items(researches) { research ->
+                    ResearchCard(research, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp))
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun PengajaranContent(teachings: List<Teaching>) {

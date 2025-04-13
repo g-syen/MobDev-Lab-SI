@@ -170,7 +170,7 @@ fun AppNavigation(
         }
 
         composable(Screen.Content.route) {
-            ContentScreen()
+            ContentScreen(navController = navController)
         }
 
         composable(Screen.ProfileLab.route) {
@@ -624,24 +624,8 @@ fun JournalsScreen(
     Text(text = "Journals")
 }
 
-@Composable
-fun ContentScreen(
-
-) {
-    Text(text = "Content")
-}
 
 
-
-@Composable
-fun AddEditDevotionScreen(modifier: Modifier = Modifier,navController: NavController) {
-    Text("Add Devotion")
-}
-
-@Composable
-fun AddEditTeachingScreen(modifier: Modifier = Modifier,navController: NavController) {
-    Text("Add Teaching")
-}
 
 @Composable
 fun ChangePasswordScreen(modifier: Modifier = Modifier,navController: NavController) {

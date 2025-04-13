@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.studentemployee.data.Article
 import com.example.studentemployee.data.Devotion
 import com.example.studentemployee.data.FirestoreRepository
+import com.example.studentemployee.data.Research
+import com.example.studentemployee.data.Teaching
 import com.example.studentemployee.data.UserProfile
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,11 +22,14 @@ class ProfileViewModel : ViewModel() {
     private val _socialLinks = MutableStateFlow<Map<String, String>>(emptyMap())
     val socialLinks: StateFlow<Map<String, String>> = _socialLinks
 
-    private val _articles = MutableStateFlow<List<Article>>(emptyList())
-    val articles: StateFlow<List<Article>> = _articles
+    private val _researches = MutableStateFlow<List<Research>>(emptyList())
+    val researches: StateFlow<List<Research>> = _researches
 
     private val _devotions = MutableStateFlow<List<Devotion>>(emptyList())
     val devotions: StateFlow<List<Devotion>> = _devotions
+
+    private val _teachings = MutableStateFlow<List<Teaching>>(emptyList())
+    val teachings: StateFlow<List<Teaching>> = _teachings
 
     fun loadUserProfile(userId: String) {
         viewModelScope.launch {
@@ -58,13 +63,18 @@ class ProfileViewModel : ViewModel() {
     fun loadUserContributions(userId: String) {
         viewModelScope.launch {
             launch {
-                repository.getUserArticles(userId).collect {
-                    _articles.value = it
+                repository.getUserResearches(userId).collect {
+                    _researches.value = it
                 }
             }
             launch {
                 repository.getUserDevotions(userId).collect {
                     _devotions.value = it
+                }
+            }
+            launch {
+                repository.getUserTeachings(userId).collect{
+                    _teachings.value = it
                 }
             }
         }

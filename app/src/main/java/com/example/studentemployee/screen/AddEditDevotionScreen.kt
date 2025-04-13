@@ -3,26 +3,19 @@ package com.example.studentemployee.screen
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.CardDefaults
@@ -52,56 +45,55 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.studentemployee.Screen
-import com.example.studentemployee.components.ArtikelContent
 import com.example.studentemployee.components.RoundedCard
 import com.example.studentemployee.components.TopAppBarMenu
-import com.example.studentemployee.data.Article
+import com.example.studentemployee.data.Devotion
 import com.example.studentemployee.data.Research
-import com.example.studentemployee.viewmodel.ProfileViewModel
-import com.example.studentemployee.viewmodel.ResearchViewModel
+import com.example.studentemployee.viewmodel.DevotionViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun AddEditResearchScreen(
+fun AddEditDevotionScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: ResearchViewModel = viewModel(),
+    viewModel: DevotionViewModel = viewModel(),
 ) {
-    val userResearches by viewModel.researches.collectAsState()
+    val userDevotions by viewModel.devotions.collectAsState()
     val userId = FirebaseAuth.getInstance().currentUser?.uid
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         if (userId != null) {
-            viewModel.loadUserResearches(userId)
+            viewModel.loadUserDevotions(userId)
         }
     }
 
-    var researchTitle by remember { mutableStateOf("") }
-    var researchAuthor by remember { mutableStateOf("") }
-    var researchUrl by remember { mutableStateOf("") }
-    var articles by remember { mutableStateOf<List<Article>>(emptyList()) }
+    var devotionTitle by remember { mutableStateOf("") }
+    var devotionContributors by remember { mutableStateOf("") }
+    var devotionUrl by remember { mutableStateOf("") }
+
     var isEdit by remember { mutableStateOf(false) }
-    var selectedResearch by remember { mutableStateOf<Research?>(null) }
+    var selectedDevotion by remember { mutableStateOf<Devotion?>(null) }
 
     var titleError by remember { mutableStateOf(false) }
-    var authorError by remember { mutableStateOf(false) }
+    var contributorsError by remember { mutableStateOf(false) }
     var urlError by remember { mutableStateOf(false) }
 
-    LaunchedEffect(selectedResearch) {
-        selectedResearch?.let {
-            researchTitle = it.title
-            researchAuthor = it.authors
-            researchUrl = it.link
+    LaunchedEffect(selectedDevotion) {
+        selectedDevotion?.let {
+            devotionTitle = it.title
+            devotionContributors = it.contributors
+            devotionUrl = it.link
         }
     }
 
+
+
     fun clearField() {
-        researchTitle = ""
-        researchAuthor = ""
-        researchUrl = ""
-        selectedResearch = null
+        devotionTitle = ""
+        devotionContributors = ""
+        devotionUrl = ""
+        selectedDevotion = null
         isEdit = false
     }
 
@@ -109,30 +101,44 @@ fun AddEditResearchScreen(
         return url.startsWith("http://") || url.startsWith("https://")
     }
 
-    articles = listOf(
-        Article(
-            title = "Implementasi Machine Learning untuk Prediksi Penyakit pada Data Medis",
-            authors = "Dewi Kartika, S.Kom., M.Sc.; Andi Susanto, M.T.",
-            link = "https://ieee.com/"
+    val sampleDevotions = listOf(
+        Devotion(
+            id = "1",
+            title = "Pelatihan Digital Marketing untuk UMKM di Kota Batu",
+            link = "https://example.com/pengabdian1",
+            contributors = "Dewi Kartika, Budi Santoso, Rina Marlina"
         ),
-        Article(
-            title = "Analisis Sentimen di Media Sosial Menggunakan Deep Learning",
-            authors = "Budi Hartono, Ph.D.; Dewi Kartika, S.Kom., M.Sc.",
-            link = "https://ieee.com/"
+        Devotion(
+            id = "2",
+            title = "Pendampingan Pembelajaran Daring di Sekolah Dasar",
+            link = "https://example.com/pengabdian2",
+            contributors = "Andi Wijaya, Siti Nurhaliza"
         ),
-        Article(
-            title = "Pengembangan Sistem Rekomendasi Makanan Bergizi Berbasis Preferensi Anak",
-            authors = "Dewi Kartika, S.Kom., M.Sc.",
-            link = "https://ieee.com/"
+        Devotion(
+            id = "3",
+            title = "Pelatihan Literasi Digital untuk Guru PAUD",
+            link = "https://example.com/pengabdian3",
+            contributors = "Dewi Kartika, Rudi Hartono, Intan Permata"
+        ),
+        Devotion(
+            id = "4",
+            title = "Pemberdayaan Masyarakat Desa Melalui Aplikasi Pertanian Pintar",
+            link = "https://example.com/pengabdian4",
+            contributors = "Siti Nurhaliza, Ahmad Fauzi"
+        ),
+        Devotion(
+            id = "5",
+            title = "Workshop Pembuatan Konten Edukasi untuk Remaja",
+            link = "https://example.com/pengabdian5",
+            contributors = "Budi Santoso, Eka Putri, Dewa Bagus"
         )
     )
-
 
     Scaffold(
         topBar = {
             TopAppBarMenu(
                 onClick = { navController.navigateUp() },
-                text = "Tambah & Edit Penelitian"
+                text = "Tambah & Edit Pengabdian"
             )
         },
         containerColor = Color(0xFFF9F9F9)
@@ -151,29 +157,29 @@ fun AddEditResearchScreen(
 
                 ) {
                     Text(
-                        "Tambahkan / Edit Penelitian",
+                        "Tambahkan / Edit Pengabdian",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0XFFF37619)
                     )
                     CustomDivider()
                     CustomTextField(
-                        value = researchTitle,
-                        onValueChange = { researchTitle = it },
-                        label = "Masukkan Judul Penelitian"
+                        value = devotionTitle,
+                        onValueChange = { devotionTitle = it },
+                        label = "Masukkan Nama Pengabdian"
                     )
                     CustomTextField(
-                        value = researchAuthor,
-                        onValueChange = { researchAuthor = it },
-                        label = "Masukkan Penulis Penelitian"
+                        value = devotionContributors,
+                        onValueChange = { devotionContributors = it },
+                        label = "Masukkan Kontributor Pengabdian"
                     )
                     CustomTextField(
-                        value = researchUrl,
+                        value = devotionUrl,
                         onValueChange = {
-                            researchUrl = it
+                            devotionUrl = it
                             urlError = false
                         },
-                        label = "Masukkan Link Penelitian",
+                        label = "Masukkan Link Pengabdian",
                         isError = urlError,
                         supportingText = {
                             if (urlError) Text(
@@ -184,14 +190,13 @@ fun AddEditResearchScreen(
                     )
                     Spacer(Modifier.height(8.dp))
                     CustomButton(
-                        onClick = {
-                            titleError = researchTitle.isBlank()
-                            authorError = researchAuthor.isBlank()
-                            urlError =
-                                researchUrl.isBlank() || !isValidUrl(researchUrl)
+                        text = if (isEdit) "Edit Pengabdian" else "Simpan Pengabdian",
+                        onClick = {titleError = devotionTitle.isBlank()
+                            contributorsError = devotionContributors.isBlank()
+                            urlError = devotionUrl.isBlank() || !isValidUrl(devotionUrl)
 
                             if (userId != null) {
-                                if (titleError || authorError || urlError) {
+                                if (titleError || contributorsError || urlError) {
                                     Toast.makeText(
                                         context,
                                         "Mohon lengkapi semua field dengan benar.",
@@ -200,15 +205,15 @@ fun AddEditResearchScreen(
                                     return@CustomButton
                                 }
                                 if (!isEdit) {
-                                    //add new research
-                                    val newResearch = Research(
-                                        title = researchTitle,
-                                        authors = researchAuthor,
-                                        link = researchUrl
+                                    //add new devotion
+                                    val newDevotion = Devotion(
+                                        title = devotionTitle,
+                                        contributors = devotionContributors,
+                                        link = devotionUrl
                                     )
-                                    viewModel.addResearch(
+                                    viewModel.addDevotion(
                                         userId,
-                                        newResearch,
+                                        newDevotion,
                                         onSuccess = {
                                             Toast.makeText(
                                                 context,
@@ -226,15 +231,16 @@ fun AddEditResearchScreen(
                                         }
                                     )
                                 } else {
-                                    val updatedResearch = Research(
-                                        id = selectedResearch?.id ?: "",
-                                        title = researchTitle,
-                                        authors = researchAuthor,
-                                        link = researchUrl,
+                                    //update devotion
+                                    val updatedDevotion = Devotion(
+                                        id = selectedDevotion?.id ?: "",
+                                        title = devotionTitle,
+                                        contributors = devotionContributors,
+                                        link = devotionUrl,
                                     )
-                                    viewModel.updateResearch(
+                                    viewModel.updateDevotion(
                                         userId = userId,
-                                        research = updatedResearch,
+                                        devotion = updatedDevotion,
                                         onSuccess = {
                                             Toast.makeText(
                                                 context,
@@ -254,31 +260,29 @@ fun AddEditResearchScreen(
                                 }
                             }
                         },
-                        text = if (isEdit) "Edit Penelitian" else "Simpan Penelitian"
                     )
                 }
             }
             Text(
-                "Penelitian yang telah diunggah",
+                "Pengabdian yang telah diunggah",
                 modifier = modifier.padding(start = 24.dp),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0XFFF37619)
             )
-
             LazyColumn(modifier = modifier.padding(horizontal = 24.dp)) {
-                items(userResearches) { research ->
-                    ResearchCard(
-                        research = research,
-                        onEditResearch = {
-                            selectedResearch = research
+                items(userDevotions) { devotion ->
+                    DevotionCard(
+                        devotion = devotion,
+                        onEditDevotion = {
+                            selectedDevotion = devotion
                             isEdit = true
                         },
-                        onDeleteResearch = {
-                            if (userId != null && research.id.isNotEmpty()) {
-                                viewModel.deleteResearch(
+                        onDeleteDevotion = {
+                            if (userId != null && devotion.id.isNotEmpty()) {
+                                viewModel.deleteDevotion(
                                     userId = userId,
-                                    researchId = research.id,
+                                    devotionId = devotion.id,
                                     onSuccess = {
                                         clearField()
                                         Toast.makeText(
@@ -306,16 +310,16 @@ fun AddEditResearchScreen(
 
 @Preview
 @Composable
-private fun AddEditResearchScreenPreview() {
-    AddEditResearchScreen(navController = rememberNavController())
+private fun AddEditDevotionScreenPreview() {
+    AddEditDevotionScreen(navController = rememberNavController())
 }
 
 @Composable
-fun ResearchCard(
-    research: Research,
+fun DevotionCard(
+    devotion: Devotion,
     modifier: Modifier = Modifier,
-    onEditResearch: () -> Unit,
-    onDeleteResearch: () -> Unit
+    onEditDevotion: () -> Unit,
+    onDeleteDevotion: () -> Unit
 
 ) {
     val context = LocalContext.current
@@ -324,7 +328,7 @@ fun ResearchCard(
             .padding(vertical = 8.dp)
             .clickable {
                 val intent =
-                    Intent(Intent.ACTION_VIEW, Uri.parse(research.link))
+                    Intent(Intent.ACTION_VIEW, Uri.parse(devotion.link))
                 context.startActivity(intent)
             },
         shape = RoundedCornerShape(12.dp),
@@ -343,14 +347,14 @@ fun ResearchCard(
                     .padding(8.dp)
             ) {
                 Text(
-                    text = research.title,
+                    text = devotion.title,
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = research.authors,
+                    text = devotion.contributors,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray,
                     maxLines = 1,
@@ -359,18 +363,18 @@ fun ResearchCard(
                 )
             }
 
-            Row{
-                IconButton(onClick = onEditResearch) {
+            Row {
+                IconButton(onClick = onEditDevotion) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
-                        contentDescription = "Edit Research Icon",
+                        contentDescription = "Edit Devotion Icon",
                         tint = Color(0xFF426193) // contoh warna biru untuk edit
                     )
                 }
-                IconButton(onClick = onDeleteResearch) {
+                IconButton(onClick = onDeleteDevotion) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = "Delete Research Icon",
+                        contentDescription = "Delete Devotion Icon",
                         tint = Color(0xFFE55304) // contoh warna oranye/merah untuk delete
                     )
                 }
@@ -381,14 +385,15 @@ fun ResearchCard(
 
 @Preview
 @Composable
-private fun ResearchCardPreview() {
-    ResearchCard(
-        research = Research(
-            title = "Penerapan Deep Learning untuk Deteksi Dini Penyakit Paru-paru Berdasarkan Citra X-ray Menggunakan CNN",
-            authors = "Dewi Kartika, S.Kom., M.Sc.; Andi Susanto, M.T.",
-            link = "https://example.com/article1"
+private fun DevotionCardPreview() {
+    DevotionCard(
+        devotion = Devotion(
+            id = "",
+            title = "2023. Pelatihan Penguatan Layanan Pendidikan di POS PAUD Kasih Sayang Kota Malang",
+            contributors = "Dewi Kartika, Budi Santoso, Rina Marlina, Andi Wijaya, Siti Nurhaliza",
+            link = "",
         ),
-        onEditResearch = {},
-        onDeleteResearch = {}
+        onEditDevotion = {},
+        onDeleteDevotion = {}
     )
 }

@@ -62,7 +62,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.core.net.toUri
 import com.example.studentemployee.Screen
 import com.example.studentemployee.components.ArtikelContent
+import com.example.studentemployee.components.PenelitianContent
 import com.example.studentemployee.components.PengabdianContent
+import com.example.studentemployee.components.PengajaranContent
 import com.example.studentemployee.components.TabSection
 
 
@@ -75,8 +77,9 @@ fun ProfileScreen(
 ) {
     val userProfile by viewModel.userProfile.collectAsState()
     val socialLinks by viewModel.socialLinks.collectAsState()
-    val articles by viewModel.articles.collectAsState()
+    val researches by viewModel.researches.collectAsState()
     val devotions by viewModel.devotions.collectAsState()
+    val teachings by viewModel.teachings.collectAsState()
     var selectedTab by remember { mutableStateOf("Artikel") }
 
     LaunchedEffect(Unit) {
@@ -153,7 +156,7 @@ fun ProfileScreen(
                 userProfile?.let {
                     NameSocialsCard(
                         name = it.nama,
-                        nip = "198802022012100901",
+                        nip = it.nip,
                         socialLinks = socialLinks
                     )
                     ProfileCard(
@@ -165,24 +168,29 @@ fun ProfileScreen(
                         text = it.biography
                     )
                 }
+            }
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                elevation = CardDefaults.elevatedCardElevation(4.dp),
+                colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
+            ) {
+                TabSection(selectedTab) { newTab ->
+                    selectedTab = newTab
+                }
+            }
+
+            when (selectedTab) {
+                "Penelitian" -> PenelitianContent(researches)
+                "Pengabdian" -> PengabdianContent(devotions)
+                "Pengajaran" -> PengajaranContent(teachings)
+            }
+
+            Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)) {
                 CustomButton(onClick = {}, text = "Logout")
             }
-//            ElevatedCard(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(50.dp),
-//                elevation = CardDefaults.elevatedCardElevation(4.dp),
-//                colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
-//            ) {
-//                TabSection(selectedTab) { newTab ->
-//                    selectedTab = newTab
-//                }
-//            }
-//
-//            when (selectedTab) {
-//                "Artikel" -> ArtikelContent(articles)
-//                "Pengabdian" -> PengabdianContent(devotions)
-//            }
+
         }
     }
 }

@@ -35,6 +35,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,7 +81,8 @@ fun ProfileLabScreen(
             Spacer(modifier = Modifier.height(10.dp))
             CardVisi()
             CardMisi()
-            CardSejarah()
+            CardTujuan()
+            CardSasaran()
             CardLambang()
             Spacer(modifier = Modifier.height(10.dp))
         }
@@ -98,8 +103,27 @@ fun CardVisi(modifier: Modifier = Modifier) {
             SectionHeader(text = "Visi")
             Spacer(Modifier.height(10.dp))
             Text(
-                "Menjadi laboratorium unggulan dalam pengembangan dan penerapan sistem informasi berbasis teknologi terkini untuk mendukung inovasi, penelitian, dan solusi digital yang berdaya saing global.",
-                color = Color(0xff195693),
+                buildAnnotatedString {
+                    append("Menjadi laboratorium ")
+
+                    withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                        append("unggul di bidang Sistem Informasi")
+                    }
+
+                    append(" yang ")
+
+                    withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                        append("berdaya saing internasional")
+                    }
+
+                    append(" melalui ")
+
+                    withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                        append("integrasi")
+                    }
+
+                    append(" pendidikan, penelitian, dan inovasi teknologi yang mendukung pengembangan industri dan masyarakat.")
+                }, color = Color(0xff195693),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Justify
@@ -117,9 +141,11 @@ private fun CardVisiPreview() {
 @Composable
 fun ListMisi() {
     val missions = listOf(
-        "Meningkatkan Kolaborasi" to "Meningkatkan kolaborasi dengan akademisi, praktisi, dan mitra industri untuk memperkuat ekosistem riset pengembangan teknologi.",
-        "Inovasi Berkelanjutan" to "Mengembangkan solusi inovatif berbasis teknologi informasi yang bermanfaat bagi masyarakat dan industri.",
-        "Penguatan Kompetensi" to "Membantu mahasiswa dan peneliti dalam meningkatkan keterampilan dan wawasan di bidang sistem informasi."
+        "Pendidikan" to "Mendukung penyelenggaraan pendidikan di bidang Sistem Informasi yang berstandar internasional, berbasis teknologi terkini, serta berorientasi pada kebutuhan industri dan masyarakat.",
+        "Penelitian dan Inovasi" to "Mendukung peningkatan kualitas penelitian yang relevan dan berkelanjutan di bidang Sistem Informasi untuk menghasilkan solusi teknologi tepat guna yang dapat diterapkan di berbagai sektor industri dan masyarakat.",
+        "Pengabdian kepada Masyarakat" to "Mendukung pengembangan program-program pengabdian yang berbasis teknologi Sistem Informasi untuk memberdayakan masyarakat dan mendukung transformasi digital di tingkat lokal, nasional, dan internasional.",
+        "Kerjasama Strategis" to "Mendukung perluasan kerjasama strategis dengan industri, lembaga pendidikan, dan institusi penelitian baik di dalam maupun luar negeri untuk mendukung pendidikan, penelitian, dan inovasi yang berkualitas.",
+        "Pengembangan Tata Kelola" to "Mendukung perwujudan tata kelola laboratorium yang transparan, akuntabel, efektif, dan efisien untuk mendukung operasional laboratorium yang berdaya saing unggul."
     )
 
     Column() {
@@ -153,17 +179,27 @@ private fun CardMisiPreview() {
 }
 
 @Composable
-fun ListSejarah() {
-    val sejarah = listOf(
-        "Didirikan" to "Lab Sistem Informasi didirikan pada tahun 2005 sebagai bagian dari Fakultas Ilmu Komputer untuk mendukung riset dan pengembangan di bidang sistem informasi.",
-        "Pengembangan Awal" to "Pada tahun 2008, lab mulai mengembangkan berbagai penelitian terkait sistem informasi berbasis web dan teknologi enterprise.",
-        "Ekspansi dan Kolaborasi" to "Sejak 2015, Lab Sistem Informasi aktif menjalin kerja sama dengan industri dan institusi akademik dalam berbagai proyek penelitian dan pengembangan.",
-        "Transformasi Digital" to "Pada tahun 2020, lab fokus pada inovasi di bidang kecerdasan buatan, big data, dan transformasi digital untuk mendukung solusi berbasis teknologi.",
-        "Pengembangan Terkini" to "Saat ini, lab terus berkembang dengan berbagai penelitian dan proyek yang berorientasi pada smart systems dan digital economy."
+fun ListSasaran() {
+    val sasaran = listOf(
+        "Bidang Pendidikan" to """
+        Mengembangkan kurikulum praktis berbasis proyek yang selaras dengan kebutuhan industri dan perkembangan teknologi terbaru.
+        
+        Menyediakan fasilitas pembelajaran berbasis teknologi yang mendukung pengembangan kompetensi mahasiswa.
+        
+        Menyediakan program pelatihan sertifikasi TIK bagi mahasiswa untuk meningkatkan kompetensi profesional mereka.
+    """.trimIndent(),
+
+        "Bidang Penelitian" to """
+        Mendorong riset-riset inovatif di bidang Sistem Informasi yang memberikan dampak nyata bagi masyarakat dan industri.
+        
+        Menyediakan pendampingan dan sumber daya untuk meningkatkan kualitas publikasi ilmiah dosen dan mahasiswa.
+        
+        Mengembangkan kolaborasi riset antara akademisi, industri, dan pemerintah.
+    """.trimIndent()
     )
 
     Column {
-        sejarah.forEach { (title, description) ->
+        sasaran.forEach { (title, description) ->
             DropDownProfile(title, description)
         }
     }
@@ -171,35 +207,114 @@ fun ListSejarah() {
 
 @Preview
 @Composable
-private fun ListSejarahPreview() {
-    ListSejarah()
+private fun ListSasaranPreview() {
+    ListSasaran()
 }
 
 @Composable
-fun CardSejarah(modifier: Modifier = Modifier) {
+fun CardSasaran(modifier: Modifier = Modifier) {
     RoundedCard {
         Column() {
-            SectionHeader(text = "Sejarah")
+            SectionHeader(text = "Sasaran")
             Spacer(Modifier.height(10.dp))
-            ListSejarah()
+            ListSasaran()
         }
     }
 }
 
 @Preview
 @Composable
-private fun CardSejarahPreview() {
-    CardSejarah()
+private fun CardSasaranPreview() {
+    CardSasaran()
 }
+
+
+@Composable
+fun ListTujuan() {
+    val tujuan = listOf(
+        "Pengembangan Mahasiswa" to
+                "Menghasilkan mahasiswa yang kompeten, kreatif, dan inovatif di bidang Sistem Informasi dengan jiwa entrepreneur dan daya saing internasional.",
+
+        "Peningkatan Luaran Penelitian" to
+                "Meningkatkan jumlah dan kualitas publikasi ilmiah serta luaran berupa perangkat lunak Sistem Informasi yang bermanfaat bagi masyarakat dan industri.",
+
+        "Kolaborasi Nasional dan Internasional" to
+                "Memperkuat kolaborasi nasional dan internasional di bidang Sistem Informasi untuk mendukung pengembangan teknologi dan inovasi.",
+
+        "Penguatan Suasana Akademik" to
+                "Mewujudkan suasana akademik yang kondusif untuk mendukung pengembangan pendidikan, penelitian, dan pengabdian kepada masyarakat di bidang Sistem Informasi.",
+
+        "Peningkatan Sarana dan Prasarana" to
+                "Meningkatkan sarana dan prasarana yang mendukung kegiatan penelitian dan pengembangan teknologi Sistem Informasi."
+    )
+
+    Column {
+        tujuan.forEach { (title, description) ->
+            DropDownProfile(title, description)
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ListTujuanPreview() {
+    ListTujuan()
+}
+
+@Composable
+fun CardTujuan(modifier: Modifier = Modifier) {
+    RoundedCard {
+        Column() {
+            SectionHeader(text = "Tujuan")
+            Spacer(Modifier.height(10.dp))
+            ListTujuan()
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun CardTujuanPreview() {
+    CardTujuan()
+}
+
 
 @Composable
 fun ListLambang() {
     val lambang = listOf(
-        "Logo Lab SI" to "Melambangkan integrasi teknologi dan informasi, dengan warna biru sebagai simbol kepercayaan dan inovasi.",
-        "Garis Melengkung" to "Merepresentasikan fleksibilitas dan adaptasi terhadap perkembangan teknologi informasi yang dinamis.",
-        "Ikon Digital" to "Menunjukkan fokus lab pada kecerdasan buatan, big data, dan transformasi digital.",
-        "Warna Oranye" to "Melambangkan semangat, kreativitas, dan inovasi dalam pengembangan sistem informasi.",
-        "Struktur Geometris" to "Menggambarkan kestabilan, keteraturan, dan pendekatan berbasis sains dalam setiap penelitian yang dilakukan di Lab SI."
+        "Logo SI" to """
+        Mencerminkan kesatuan dan keselarasan berbagai aspek sistem informasi.
+        
+        Pertemuan kedua gelombang menggambarkan keseimbangan antara aspek teknis dan kreatif.
+    """.trimIndent(),
+
+        "Gerigi" to """
+        Melambangkan aspek teknis dan rekayasa dalam sistem informasi.
+        
+        Menggambarkan perkembangan teknologi yang terus berevolusi.
+        
+        Posisinya sebagai latar belakang menekankan bahwa teknologi adalah fondasi yang mendukung seluruh aktivitas laboratorium.
+    """.trimIndent(),
+
+        "Aliran Gelombang" to """
+        Bentuk lengkung yang lebih ekspresif dan dinamis menggambarkan fleksibilitas dan adaptabilitas.
+    """.trimIndent(),
+
+        "Jaringan Graf" to """
+        Tiga simpul (node) melambangkan prinsip dasar sistem informasi: data, proses, dan pengguna.
+        
+        Garis penghubung melambangkan integrasi dan aliran informasi yang terorganisir sekaligus melambangkan konektivitas data adalah fokus utama laboratorium.
+    """.trimIndent(),
+
+        "Tipografi \"LAB SISTEM INFORMASI\"" to """
+        Jenis huruf serif klasik melambangkan tradisi akademis, ketepatan, dan keandalan.
+        
+        Warna biru menguatkan identitas profesional dan pendekatan sistematis laboratorium.
+        
+        Posisi berada di bagian bawah logo, memberikan fondasi dan penegasan identitas laboratorium.
+        
+        Tipografi ini memperkuat komitmen laboratorium terhadap keunggulan akademis dan profesionalisme dalam bidang sistem informasi.
+    """.trimIndent()
     )
 
     Column {

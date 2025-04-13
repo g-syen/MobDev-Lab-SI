@@ -58,6 +58,7 @@ fun EditProfileScreen(
     val socialLinks by viewModel.socialLinks.collectAsState()
 
     var name by remember { mutableStateOf("") }
+    var nip by remember { mutableStateOf("") }
     var researchInterest by remember { mutableStateOf("") }
     var linkedinUrl by remember { mutableStateOf("") }
     var githubUrl by remember { mutableStateOf("") }
@@ -75,6 +76,7 @@ fun EditProfileScreen(
     LaunchedEffect(userProfile) {
         userProfile?.let {
             name = it.nama
+            nip = it.nip
             biography = it.biography
             researchInterest = it.specialist
         }
@@ -89,29 +91,10 @@ fun EditProfileScreen(
 
     Scaffold(
         topBar = {
-//            TopAppBar(
-//                title = {
-//                    Text(
-//                        "Edit Profil Saya",
-//                        color = Color.White,
-//                        fontSize = 16.sp,
-//                        style = MaterialTheme.typography.titleSmall,
-//                    )
-//                },
-//                navigationIcon = {
-//                    IconButton(onClick = { navController.navigateUp() }) {
-//                        Icon(
-//                            Icons.Default.ArrowBack,
-//                            contentDescription = "Back",
-//                            tint = Color.White
-//                        )
-//                    }
-//                },
-//                colors = TopAppBarDefaults.topAppBarColors(
-//                    containerColor = Color(0xFF19253F)
-//                )
-//            )
-            TopAppBarMenu(onClick = {navController.navigateUp()}, text = "Edit Profil Saya")
+            TopAppBarMenu(
+                onClick = { navController.navigateUp() },
+                text = "Edit Profil Saya"
+            )
         },
         containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
@@ -122,7 +105,7 @@ fun EditProfileScreen(
                 .padding(horizontal = 24.dp, vertical = 16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            NameInitialsCard(name = name)
+            NameInitialsCard(name = name, nip = nip)
             CustomDivider()
             CustomTextField(
                 value = researchInterest,
@@ -180,7 +163,7 @@ private fun EditProfileScreenPreview() {
 }
 
 @Composable
-fun NameInitialsCard(modifier: Modifier = Modifier,name:String) {
+fun NameInitialsCard(modifier: Modifier = Modifier, name: String, nip: String) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -195,7 +178,7 @@ fun NameInitialsCard(modifier: Modifier = Modifier,name:String) {
                 color = Color(0XFF195693)
             )
             Text(
-                "198802022012100901",
+                nip,
                 fontSize = 16.sp,
                 color = Color(0XFFE2640D)
             )
@@ -206,7 +189,10 @@ fun NameInitialsCard(modifier: Modifier = Modifier,name:String) {
 @Preview
 @Composable
 private fun NameInitialsCardPreview() {
-    NameInitialsCard(name = "Dewi Kartika, S.Kom., M.Sc. ")
+    NameInitialsCard(
+        name = "Dewi Kartika, S.Kom., M.Sc. ",
+        nip = "198802022012100901"
+    )
 }
 
 @Composable

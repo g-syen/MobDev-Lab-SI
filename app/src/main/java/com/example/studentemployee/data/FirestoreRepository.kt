@@ -119,12 +119,12 @@ class FirestoreRepository {
     fun getAllNews(): Flow<List<News>> = callbackFlow {
         val listener = db.collection("news")
             .addSnapshotListener { snapshot, error ->
-                if(error != null) {
+                if (error != null) {
                     close(error)
                     return@addSnapshotListener
                 }
 
-                if(snapshot!=null) {
+                if (snapshot != null) {
                     val news =
                         snapshot.documents.mapNotNull { it.toObject(News::class.java) }
                     trySend(news).isSuccess
@@ -149,7 +149,11 @@ class FirestoreRepository {
             .document(news.id).set(news)
     }
 
-    fun deleteNews(newsId: String, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+    fun deleteNews(
+        newsId: String,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         db.collection("news")
             .document(newsId)
             .delete()
@@ -160,12 +164,12 @@ class FirestoreRepository {
     fun getAllEvents(): Flow<List<Event>> = callbackFlow {
         val listener = db.collection("events")
             .addSnapshotListener { snapshot, error ->
-                if(error != null) {
+                if (error != null) {
                     close(error)
                     return@addSnapshotListener
                 }
 
-                if(snapshot!=null) {
+                if (snapshot != null) {
                     val events =
                         snapshot.documents.mapNotNull { it.toObject(Event::class.java) }
                     trySend(events).isSuccess
@@ -190,7 +194,11 @@ class FirestoreRepository {
             .document(event.id).set(event)
     }
 
-    fun deleteEvent(eventId: String, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+    fun deleteEvent(
+        eventId: String,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         db.collection("events")
             .document(eventId)
             .delete()
@@ -218,31 +226,31 @@ class FirestoreRepository {
         awaitClose { listener.remove() }
     }
 
-    fun getUserDevotions(userId: String): Flow<List<Devotion>> = callbackFlow {
-        val listener = db.collection("users")
-            .document(userId)
-            .collection("devotions")
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null) {
-                    val devotions =
-                        snapshot.documents.mapNotNull { it.toObject(Devotion::class.java) }
-                    trySend(devotions).isSuccess
-                }
-            }
-
-        awaitClose { listener.remove() }
-    }
+//    fun getUserDevotions(userId: String): Flow<List<Devotion>> = callbackFlow {
+//        val listener = db.collection("users")
+//            .document(userId)
+//            .collection("devotions")
+//            .addSnapshotListener { snapshot, error ->
+//                if (error != null) {
+//                    close(error)
+//                    return@addSnapshotListener
+//                }
+//
+//                if (snapshot != null) {
+//                    val devotions =
+//                        snapshot.documents.mapNotNull { it.toObject(Devotion::class.java) }
+//                    trySend(devotions).isSuccess
+//                }
+//            }
+//
+//        awaitClose { listener.remove() }
+//    }
 
     fun getUserResearches(userId: String): Flow<List<Research>> = callbackFlow {
         val listener = db
             .collection("users")
             .document(userId)
-            .collection("articles")
+            .collection("researches")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
@@ -263,11 +271,10 @@ class FirestoreRepository {
     }
 
     fun addResearch(userId: String, research: Research): Task<Void> {
-        //belum buat collection research sendiri
         val docRef = db
             .collection("users")
             .document(userId)
-            .collection("articles")
+            .collection("researches")
             .document()
         val researchWithId = research.copy(id = docRef.id)
 
@@ -275,21 +282,223 @@ class FirestoreRepository {
     }
 
     fun updateResearch(userId: String, research: Research): Task<Void> {
-        //belum buat collection research sendiri
         return db
             .collection("users")
             .document(userId)
-            .collection("articles")
+            .collection("researches")
             .document(research.id).set(research)
     }
 
-    fun deleteResearch(userId: String, researchId: String, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+    fun deleteResearch(
+        userId: String,
+        researchId: String,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         db.collection("users")
             .document(userId)
-            .collection("articles")
+            .collection("researches")
             .document(researchId)
             .delete()
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onError(it) }
     }
+
+    fun getUserTeachings(userId: String): Flow<List<Teaching>> = callbackFlow {
+        val listener = db
+            .collection("users")
+            .document(userId)
+            .collection("teachings")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    val teachings =
+                        snapshot.documents.mapNotNull { doc ->
+                            val research = doc.toObject(Teaching::class.java)
+                            research?.copy(id = doc.id)
+                        }
+                    trySend(teachings).isSuccess
+                }
+            }
+
+        awaitClose { listener.remove() }
+    }
+
+    fun addTeaching(userId: String, teaching: Teaching): Task<Void> {
+        val docRef = db
+            .collection("users")
+            .document(userId)
+            .collection("teachings")
+            .document()
+        val teachingWithId = teaching.copy(id = docRef.id)
+
+        return docRef.set(teachingWithId)
+    }
+
+    fun updateTeaching(userId: String, teaching: Teaching): Task<Void> {
+        return db
+            .collection("users")
+            .document(userId)
+            .collection("teachings")
+            .document(teaching.id).set(teaching)
+    }
+
+    fun deleteTeaching(
+        userId: String,
+        teachingId: String,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        db.collection("users")
+            .document(userId)
+            .collection("teachings")
+            .document(teachingId)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
+
+
+    fun getUserDevotions(userId: String): Flow<List<Devotion>> = callbackFlow {
+        val listener = db
+            .collection("users")
+            .document(userId)
+            .collection("devotions")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    val devotions =
+                        snapshot.documents.mapNotNull { doc ->
+                            val research = doc.toObject(Devotion::class.java)
+                            research?.copy(id = doc.id)
+                        }
+                    trySend(devotions).isSuccess
+                }
+            }
+
+        awaitClose { listener.remove() }
+    }
+
+    fun addDevotion(userId: String, devotion: Devotion): Task<Void> {
+        val docRef = db
+            .collection("users")
+            .document(userId)
+            .collection("devotions")
+            .document()
+        val devotionWithId = devotion.copy(id = docRef.id)
+
+        return docRef.set(devotionWithId)
+    }
+
+    fun updateDevotion(userId: String, devotion: Devotion): Task<Void> {
+        return db
+            .collection("users")
+            .document(userId)
+            .collection("devotions")
+            .document(devotion.id).set(devotion)
+    }
+
+    fun deleteDevotion(
+        userId: String,
+        devotionId: String,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        db.collection("users")
+            .document(userId)
+            .collection("devotions")
+            .document(devotionId)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
+
+//    fun getAllNews(): Flow<List<News>> = callbackFlow {
+//        val listener = db
+//            .collection("news")
+//            .addSnapshotListener { snapshot, error ->
+//                if (error != null) {
+//                    close(error)
+//                    return@addSnapshotListener
+//                }
+//
+//                if (snapshot != null) {
+//                    val newsList = snapshot.documents.mapNotNull { doc ->
+//                        doc.toObject(News::class.java)
+//                    }
+//                    trySend(newsList).isSuccess
+//                }
+//            }
+//
+//        awaitClose { listener.remove() }
+//    }
+//
+//    fun getAllEvents(): Flow<List<Event>> = callbackFlow {
+//        val listener = db
+//            .collection("events")
+//            .addSnapshotListener { snapshot, error ->
+//                if (error != null) {
+//                    close(error)
+//                    return@addSnapshotListener
+//                }
+//
+//                if (snapshot != null) {
+//                    val eventList = snapshot.documents.mapNotNull { doc ->
+//                        doc.toObject(Event::class.java)
+//                    }
+//                    trySend(eventList).isSuccess
+//                }
+//            }
+//
+//        awaitClose { listener.remove() }
+//    }
+
+    fun getAllUserResearches(): Flow<List<Research>> = callbackFlow {
+        val listener = db
+            .collectionGroup("researches")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    val researches = snapshot.documents.mapNotNull { doc ->
+                        doc.toObject(Research::class.java)?.copy(id = doc.id)
+                    }
+                    trySend(researches).isSuccess
+                }
+            }
+
+        awaitClose { listener.remove() }
+    }
+
+    fun getAllUserDevotions(): Flow<List<Devotion>> = callbackFlow {
+        val listener = db
+            .collectionGroup("devotions")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    val devotions = snapshot.documents.mapNotNull { doc ->
+                        doc.toObject(Devotion::class.java)?.copy(id = doc.id)
+                    }
+                    trySend(devotions).isSuccess
+                }
+            }
+
+        awaitClose { listener.remove() }
+    }
+
 }

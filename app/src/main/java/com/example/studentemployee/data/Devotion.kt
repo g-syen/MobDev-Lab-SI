@@ -1,7 +1,8 @@
 package com.example.studentemployee.data
 
 data class Devotion(
+    val id:String="",
     override val title: String = "",
-    val description: String = "",
-    val link: String = ""
-) : HasTitle
+    val link: String = "",
+    val contributors:String = ""
+): HasTitle
