@@ -10,8 +10,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import com.example.studentemployee.ui.theme.StudentEmployeeTheme
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,10 +24,38 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.studentemployee.screen.*
-import com.example.studentemployee.viewmodel.LeaderViewModel
-import com.example.studentemployee.viewmodel.MemberViewModel
-import com.example.studentemployee.viewmodel.SearchViewModel
+import com.example.studentemployee.features.auth.ui.LoginScreen
+import com.example.studentemployee.features.content.ui.ContentScreen
+import com.example.studentemployee.features.devotion.ui.AddEditDevotionScreen
+import com.example.studentemployee.features.events.ui.AddEditEventScreen
+import com.example.studentemployee.features.facilities.ui.AddEditFacilityScreen
+import com.example.studentemployee.features.facilities.ui.FacilitiesAdminScreen
+import com.example.studentemployee.features.facilities.ui.FacilitiesScreen
+import com.example.studentemployee.features.homepage.ui.HomepageAdminScreen
+import com.example.studentemployee.features.homepage.ui.HomepageGuestScreen
+import com.example.studentemployee.features.homepage.ui.HomepageMemberScreen
+import com.example.studentemployee.features.leadership.ui.AddEditLeaderScreen
+import com.example.studentemployee.features.leadership.ui.LeadershipAdminScreen
+import com.example.studentemployee.features.leadership.ui.LeadershipScreen
+import com.example.studentemployee.features.profile.ui.EditProfileScreen
+import com.example.studentemployee.features.profile.ui.ProfileScreen
+import com.example.studentemployee.features.leadership.LeaderViewModel
+import com.example.studentemployee.features.members.ui.AddEditMemberScreen
+import com.example.studentemployee.features.members.ui.MemberAdminScreen
+import com.example.studentemployee.features.members.ui.MemberScreen
+import com.example.studentemployee.features.members.MemberViewModel
+import com.example.studentemployee.features.members.ui.PersonalMemberScreen
+import com.example.studentemployee.features.menu.ui.MenuAdminScreen
+import com.example.studentemployee.features.menu.ui.MenuMemberScreen
+import com.example.studentemployee.features.news.ui.AddEditNewsScreen
+import com.example.studentemployee.features.profilelab.ui.ProfileLabScreen
+import com.example.studentemployee.features.research.ui.AddEditResearchScreen
+import com.example.studentemployee.features.search.ui.SearchAdminScreen
+import com.example.studentemployee.features.search.ui.SearchGuestScreen
+import com.example.studentemployee.features.search.ui.SearchMemberScreen
+import com.example.studentemployee.features.search.SearchViewModel
+import com.example.studentemployee.features.teaching.ui.AddEditTeachingScreen
+import com.example.studentemployee.features.uploadprofile.ui.UploadProfileScreen
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 
@@ -173,6 +199,21 @@ fun AppNavigation(
             ContentScreen(navController = navController)
         }
 
+        composable("content/{contentId}") { backStackEntry ->
+            val contentIdString = backStackEntry.arguments?.getString("contentId")
+            val contentId = contentIdString?.toIntOrNull()
+            contentId?.let {
+                ContentScreen(
+                    navController = navController,
+                    selectedPage = it
+                )
+            } ?: run {
+                navController.navigateUp()
+            }
+        }
+
+
+
         composable(Screen.ProfileLab.route) {
             ProfileLabScreen(navController = navController)
         }
@@ -238,22 +279,6 @@ fun AppNavigation(
 
         composable(Screen.Statistics.route) {
             StatisticsScreen()
-        }
-
-        composable(Screen.Events.route) {
-            EventsScreen()
-        }
-
-        composable(Screen.News.route) {
-            NewsScreen()
-        }
-
-        composable(Screen.Articles.route) {
-            ArticlesScreen()
-        }
-
-        composable(Screen.Journals.route) {
-            JournalsScreen()
         }
 
         composable(Screen.Profile.route) {
@@ -328,16 +353,16 @@ fun AppNavigation(
                     navController.navigate(Screen.Statistics.route)
                 },
                 onClickEvents = {
-                    navController.navigate(Screen.Events.route)
+                    navController.navigate("content/1")
                 },
                 onClickNews = {
-                    navController.navigate(Screen.News.route)
+                    navController.navigate("content/0")
                 },
-                onClickArticles = {
-                    navController.navigate(Screen.Articles.route)
+                onClickResearch = {
+                    navController.navigate("content/2")
                 },
-                onClickJournals = {
-                    navController.navigate(Screen.Journals.route)
+                onClickDevotion = {
+                    navController.navigate("content/3")
                 },
                 navController = navController
             )
@@ -520,16 +545,16 @@ fun AppNavigation(
                     navController.navigate(Screen.Statistics.route)
                 },
                 onClickEvents = {
-                    navController.navigate(Screen.Events.route)
+                    navController.navigate("content/1")
                 },
                 onClickNews = {
-                    navController.navigate(Screen.News.route)
+                    navController.navigate("content/0")
                 },
-                onClickArticles = {
-                    navController.navigate(Screen.Articles.route)
+                onClickResearch = {
+                    navController.navigate("content/2")
                 },
-                onClickJournals = {
-                    navController.navigate(Screen.Journals.route)
+                onClickDevotion = {
+                    navController.navigate("content/3")
                 },
                 navController = navController
             )
@@ -560,16 +585,16 @@ fun AppNavigation(
                     navController.navigate(Screen.Statistics.route)
                 },
                 onClickEvents = {
-                    navController.navigate(Screen.Events.route)
+                    navController.navigate("content/1")
                 },
                 onClickNews = {
-                    navController.navigate(Screen.News.route)
+                    navController.navigate("content/0")
                 },
-                onClickArticles = {
-                    navController.navigate(Screen.Articles.route)
+                onClickResearch = {
+                    navController.navigate("content/2")
                 },
-                onClickJournals = {
-                    navController.navigate(Screen.Journals.route)
+                onClickDevotion = {
+                    navController.navigate("content/3")
                 },
                 navController = navController
             )
