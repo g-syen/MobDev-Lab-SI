@@ -26,9 +26,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.studentemployee.Screen
-import com.example.studentemployee.components.RoundedCard
-import com.example.studentemployee.components.TopAppBarMenu
-import com.example.studentemployee.viewmodel.AuthViewModel
+import com.example.studentemployee.core.components.RoundedCard
+import com.example.studentemployee.core.components.TopAppBarMenu
+import com.example.studentemployee.features.profile.ui.CustomButton
+import com.example.studentemployee.features.profile.ui.CustomDivider
+import com.example.studentemployee.features.profile.ui.CustomTextField
+import com.example.studentemployee.features.members.AuthViewModel
 
 @Composable
 fun ChangePasswordScreen(

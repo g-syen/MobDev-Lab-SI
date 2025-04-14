@@ -1,4 +1,4 @@
-package com.example.studentemployee.viewmodel
+package com.example.studentemployee.features.members
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.EmailAuthProvider

@@ -61,6 +61,7 @@ import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.core.net.toUri
 import com.example.studentemployee.Screen
+import com.example.studentemployee.core.components.LogoutConfirmationDialog
 import com.example.studentemployee.core.components.PenelitianContent
 import com.example.studentemployee.core.components.PengabdianContent
 import com.example.studentemployee.core.components.PengajaranContent
@@ -79,7 +80,9 @@ fun ProfileScreen(
     val researches by viewModel.researches.collectAsState()
     val devotions by viewModel.devotions.collectAsState()
     val teachings by viewModel.teachings.collectAsState()
-    var selectedTab by remember { mutableStateOf("Artikel") }
+    var selectedTab by remember { mutableStateOf("Penelitian") }
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(Unit) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -139,6 +142,19 @@ fun ProfileScreen(
         bottomBar = { BottomNavBarMember(navController) },
         contentColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
+        if (showLogoutDialog) {
+            LogoutConfirmationDialog(
+                onConfirm = {
+                    FirebaseAuth.getInstance().signOut()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.HomepageMember.route) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onDismiss = { showLogoutDialog = false },
+            )
+        }
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -148,6 +164,7 @@ fun ProfileScreen(
                 .padding(vertical = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+
             Column(
                 modifier = Modifier.padding(horizontal = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -186,8 +203,15 @@ fun ProfileScreen(
                 "Pengajaran" -> PengajaranContent(teachings)
             }
 
-            Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)) {
-                CustomButton(onClick = {}, text = "Logout")
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+            ) {
+                CustomButton(
+                    onClick = { showLogoutDialog = true },
+                    text = "Logout"
+                )
             }
 
         }

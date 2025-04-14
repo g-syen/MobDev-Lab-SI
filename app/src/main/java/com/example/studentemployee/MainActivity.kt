@@ -56,6 +56,8 @@ import com.example.studentemployee.features.search.ui.SearchMemberScreen
 import com.example.studentemployee.features.search.SearchViewModel
 import com.example.studentemployee.features.teaching.ui.AddEditTeachingScreen
 import com.example.studentemployee.features.uploadprofile.ui.UploadProfileScreen
+import com.example.studentemployee.screen.ChangePasswordScreen
+import com.example.studentemployee.screen.StatisticsScreen
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 
@@ -278,7 +280,7 @@ fun AppNavigation(
         }
 
         composable(Screen.Statistics.route) {
-            StatisticsScreen()
+            StatisticsScreen(navController = navController)
         }
 
         composable(Screen.Profile.route) {
@@ -614,12 +616,7 @@ fun AppNavigation(
 
 
 
-@Composable
-fun StatisticsScreen(
 
-) {
-    Text(text = "Statistics")
-}
 
 @Composable
 fun EventsScreen(
@@ -652,8 +649,4 @@ fun JournalsScreen(
 
 
 
-@Composable
-fun ChangePasswordScreen(modifier: Modifier = Modifier,navController: NavController) {
-    Text("Change Password")
-}
 

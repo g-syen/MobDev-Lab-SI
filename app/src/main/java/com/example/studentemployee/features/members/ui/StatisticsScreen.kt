@@ -27,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,9 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.studentemployee.components.RoundedCard
-import com.example.studentemployee.components.SectionHeader
-import com.example.studentemployee.viewmodel.ContentViewModel
+import com.example.studentemployee.core.components.RoundedCard
+import com.example.studentemployee.features.content.ContentViewModel
 
 data class StatsItem(
     val label: String,

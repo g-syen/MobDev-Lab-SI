@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -202,16 +203,17 @@ fun CustomDivider(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTextField(
-    value: String,
+    value: String?, // sekarang nullable
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
-    supportingText: (@Composable (() -> Unit))? = null
-
+    supportingText: (@Composable (() -> Unit))? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    singleLine: Boolean = false
 ) {
     TextField(
-        value = value,
+        value = value ?: "", // gunakan empty string jika null
         onValueChange = onValueChange,
         label = {
             Text(label, color = Color(0xFFE2640D))
@@ -226,12 +228,15 @@ fun CustomTextField(
             focusedIndicatorColor = Color(0XFF195693),
             unfocusedIndicatorColor = Color(0XFF195693)
         ),
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         supportingText = supportingText,
-        isError = isError
+        isError = isError,
+        visualTransformation = visualTransformation,
+        singleLine = singleLine
     )
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
