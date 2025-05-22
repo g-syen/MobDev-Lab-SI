@@ -622,37 +622,6 @@ fun StatisticsScreen(
 }
 
 @Composable
-fun EventsScreen(
-
-) {
-    Text(text = "Events")
-}
-
-@Composable
-fun NewsScreen(
-
-) {
-    Text(text = "News")
-}
-
-@Composable
-fun ArticlesScreen(
-
-) {
-    Text(text = "Articles")
-}
-
-@Composable
-fun JournalsScreen(
-
-) {
-    Text(text = "Journals")
-}
-
-
-
-
-@Composable
 fun ChangePasswordScreen(modifier: Modifier = Modifier,navController: NavController) {
     Text("Change Password")
 }
