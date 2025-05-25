@@ -3,14 +3,13 @@ package com.example.studentemployee.features.members.ui
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -48,12 +47,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.studentemployee.core.components.DivisiCard
+import com.example.studentemployee.core.components.KelompokCard
 import com.example.studentemployee.core.components.MemberCard
 import com.example.studentemployee.core.components.SearchBar
 import com.example.studentemployee.core.components.StudentEmployeeCard
 import com.example.studentemployee.features.members.model.User
 import com.example.studentemployee.features.members.MemberViewModel
 import com.example.studentemployee.features.members.StudentEmployeeViewModel
+import com.example.studentemployee.features.members.model.Divisi
+import com.example.studentemployee.features.members.model.Kelompok
 import com.example.studentemployee.features.members.model.StudentEmployee
 import com.example.studentemployee.features.members.model.StudentEmployees
 import com.google.firebase.firestore.FirebaseFirestore
@@ -61,28 +64,45 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MemberScreen(
+fun KelompokScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     firestore: FirebaseFirestore,
     viewModel: MemberViewModel = viewModel(),
     seViewModel: StudentEmployeeViewModel = viewModel(),
-    selectedPage: Int? = null
+    selectedPage: Int? = 1,
+    selectedStudentEmployee: String? = null,
+    selectedDivisi: String? = null,
 ) {
     val memberList by viewModel.memberList.collectAsState()
     val studentEmployeeList by seViewModel.studentEmployeesData.collectAsState()
+    var studentEmployee by remember { mutableStateOf(StudentEmployee()) }
+    var divisi by remember { mutableStateOf(Divisi()) }
     var searchQuery by remember { mutableStateOf("") }
     val tabs = listOf("Dosen", "Student Employee")
+
+    studentEmployeeList.forEach { studemp ->
+        if(studemp.id == selectedStudentEmployee) {
+            studentEmployee = studemp
+            studemp.divisi.forEach { div ->
+                if (div.id == selectedDivisi) {
+                    divisi = div
+                }
+            }
+        }
+    }
 
     val filteredList = memberList.filter {
         it.nama.contains(searchQuery, ignoreCase = true)
     }
 
+    var topBarTitle by remember { mutableStateOf("${divisi.divisi}") }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Anggota Lab Sistem Informasi", color = Color.White)
+                    Text(topBarTitle, color = Color.White)
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
@@ -110,7 +130,6 @@ fun MemberScreen(
         }
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(innerPadding)
@@ -141,7 +160,7 @@ fun MemberScreen(
                                     .padding(horizontal = 4.dp, vertical = 4.dp)
                                     .clip(RoundedCornerShape(4.dp))
                                     .background(if (index == pagerState.currentPage) Color(0xFFE2640D) else Color(0xFF426193))
-                                    ,
+                                ,
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text(
@@ -173,6 +192,7 @@ fun MemberScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                         horizontalAlignment = Alignment.Start
                     ) {
+                        topBarTitle = "Anggota Lab Sistem Informasi"
                         SearchBar(
                             value = searchQuery,
                             onValueChange = { searchQuery = it },
@@ -188,13 +208,13 @@ fun MemberScreen(
                     1 -> Column (
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(24.dp)
                             .verticalScroll(rememberScrollState()),
 
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                         horizontalAlignment = Alignment.Start
                     ) {
-                        ListStudentEmployee(studentEmployee = studentEmployeeList, navController = navController)
+                        topBarTitle = "${divisi.divisi}"
+                        ListKelompok(studentEmployee = studentEmployee, divisi = divisi, navController = navController)
                     }
                 }
             }
@@ -211,20 +231,6 @@ private fun MemberScreenPreview() {
     )
 }
 
-@Composable
-fun ListMember(
-    modifier: Modifier = Modifier,
-    memberList: List<User>,
-    navController: NavController,
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        memberList.forEach { user ->
-            if (user.role == "member") {
-                MemberCard(member = user, navController = navController)
-            }
-        }
-    }
-}
 
 @Preview
 @Composable
@@ -239,8 +245,11 @@ private fun ListMemberPreview() {
 }
 
 @Composable
-private fun ListStudentEmployee(studentEmployee: List<StudentEmployee>, navController: NavController) {
-    studentEmployee.forEach { studemp ->
-        StudentEmployeeCard(studemp, navController = navController)
+private fun ListKelompok(studentEmployee: StudentEmployee, divisi: Divisi, navController: NavController) {
+    val sortedKelompokList: List<Kelompok> = divisi.kelompok.sortedBy { kelompok ->
+        kelompok.kelompok
+    }
+    sortedKelompokList.forEach { kel ->
+        KelompokCard(kelompok = kel)
     }
 }

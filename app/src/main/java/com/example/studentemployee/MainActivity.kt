@@ -8,7 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import com.example.studentemployee.features.members.ui.DivisiAdminScreen
 import com.example.studentemployee.ui.theme.StudentEmployeeTheme
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -24,6 +24,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.example.studentemployee.features.admin.ui.KelompokAdminScreen
+import com.example.studentemployee.features.members.ui.MemberAdminScreen
 import com.example.studentemployee.features.auth.ui.LoginScreen
 import com.example.studentemployee.features.content.ui.ContentScreen
 import com.example.studentemployee.features.devotion.ui.AddEditDevotionScreen
@@ -44,6 +48,13 @@ import com.example.studentemployee.features.members.ui.AddEditMemberScreen
 import com.example.studentemployee.features.members.ui.MemberAdminScreen
 import com.example.studentemployee.features.members.ui.MemberScreen
 import com.example.studentemployee.features.members.MemberViewModel
+import com.example.studentemployee.features.members.StudentEmployeeViewModel
+import com.example.studentemployee.features.members.ui.AddEditAnggotaScreen
+import com.example.studentemployee.features.members.ui.AddEditDivisiScreen
+import com.example.studentemployee.features.members.ui.AddEditKelompokScreen
+import com.example.studentemployee.features.members.ui.AddEditStudentEmployeeScreen
+import com.example.studentemployee.features.members.ui.DivisiScreen
+import com.example.studentemployee.features.members.ui.KelompokScreen
 import com.example.studentemployee.features.members.ui.PersonalMemberScreen
 import com.example.studentemployee.features.menu.ui.MenuAdminScreen
 import com.example.studentemployee.features.menu.ui.MenuMemberScreen
@@ -94,14 +105,12 @@ sealed class Screen(val route: String) {
     object ProfileLab : Screen("profilelab")
     object Leadership : Screen("leadership")
     object Member : Screen("member")
+    object Divisi : Screen("divisi")
+    object Kelompok : Screen("kelompok")
     object Facilities : Screen("facilities")
     object Statistics : Screen("statistics")
-    object Events : Screen("events")
     object News : Screen("news")
-    object Articles : Screen("articles")
-    object Journals : Screen("journals")
     object Content : Screen("content")
-    object Menu : Screen("menu")
     object SearchGuest : Screen("searchguest")
 
     object Profile : Screen("profile")
@@ -118,7 +127,9 @@ sealed class Screen(val route: String) {
     object FacilitiesAdmin : Screen("facilitiesadmin")
     object AddEditFacility : Screen("addeditfacility")
     object AddEditMember : Screen("addeditmember")
+    object AddEditStudentEmployee : Screen("addeditstudentemployee")
     object MemberAdmin : Screen("memberadmin")
+    object DivisiAdmin : Screen("divisiadmin")
     object AddEditLeader : Screen("addeditleader")
     object LeadershipAdmin : Screen("leadershipadmin")
     object MenuAdmin : Screen("menuadmin")
@@ -137,6 +148,8 @@ fun AppNavigation(
     val navController = rememberNavController()
 
     var startDestination by remember { mutableStateOf(Screen.HomepageGuest.route) }
+
+    val sharedViewModel = StudentEmployeeViewModel()
 
     if (currentUser != null)
         firestore.collection("users").document(currentUser.uid)
@@ -234,8 +247,64 @@ fun AppNavigation(
             MemberScreen(
                 navController = navController,
                 firestore = firestore,
-                viewModel = viewModel
+                viewModel = viewModel,
+                seViewModel = sharedViewModel,
             )
+        }
+
+        composable(Screen.Divisi.route) {
+            val viewModel: MemberViewModel = viewModel()
+            DivisiScreen(
+                navController = navController,
+                firestore = firestore,
+                viewModel = viewModel,
+                seViewModel = sharedViewModel,
+            )
+        }
+
+        composable("divisi/{yearBatch}") { backStackEntry ->
+            val yearBatch = backStackEntry.arguments?.getString("yearBatch")
+            val viewModel: MemberViewModel = viewModel()
+            yearBatch?.let {
+                DivisiScreen(
+                    navController = navController,
+                    firestore = firestore,
+                    viewModel = viewModel,
+                    seViewModel = sharedViewModel,
+                    selectedYearBatch = yearBatch
+                )
+            } ?: run {
+                navController.navigateUp()
+            }
+        }
+
+        composable(Screen.Kelompok.route) {
+            val viewModel: MemberViewModel = viewModel()
+            KelompokScreen(
+                navController = navController,
+                firestore = firestore,
+                viewModel = viewModel,
+                seViewModel = sharedViewModel,
+            )
+        }
+
+        composable("kelompok/{studempDivisi}") { backStackEntry ->
+            val studempDivisi = backStackEntry.arguments?.getString("studempDivisi")
+            val selectedStudentEmployee = studempDivisi?.substringBefore(",")
+            val selectedDivisi = studempDivisi?.substringAfter(",")
+            val viewModel: MemberViewModel = viewModel()
+            studempDivisi?.let {
+                KelompokScreen(
+                    navController = navController,
+                    firestore = firestore,
+                    viewModel = viewModel,
+                    seViewModel = sharedViewModel,
+                    selectedDivisi = selectedDivisi,
+                    selectedStudentEmployee = selectedStudentEmployee
+                )
+            } ?: run {
+                navController.navigateUp()
+            }
         }
 
         composable(Screen.Facilities.route) {
@@ -374,12 +443,200 @@ fun AppNavigation(
             val viewModel: MemberViewModel = viewModel()
             MemberAdminScreen(
                 navController = navController,
-                firestore = firestore,
-                viewModel = viewModel,
-                onClickAdd = {
-                    navController.navigate(Screen.AddEditMember.route)
-                }
+                seViewModel = sharedViewModel,
+                memberViewModel = viewModel,
             )
+        }
+
+        composable(Screen.AddEditStudentEmployee.route) {
+            AddEditStudentEmployeeScreen(
+                navController = navController,
+                studentEmployeeId = null
+            )
+        }
+
+        composable(
+            route = "addEditStudentEmployee/{studentEmployeeId}",
+            arguments = listOf(navArgument("studentEmployeeId") {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) { backStackEntry ->
+            val studentEmployeeId = backStackEntry.arguments?.getString("studentEmployeeId")
+            AddEditStudentEmployeeScreen(
+                navController = navController,
+                studentEmployeeId = studentEmployeeId
+            )
+        }
+
+        composable(Screen.DivisiAdmin.route) {
+            DivisiAdminScreen(
+                navController = navController,
+                seViewModel = sharedViewModel,
+                selectedYearBatch = ""
+            )
+        }
+
+        composable(
+            route = "divisiadmin/{selectedYearBatch}",
+            arguments = listOf(navArgument("selectedYearBatch") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val selectedYearBatch = backStackEntry.arguments?.getString("selectedYearBatch")
+            DivisiAdminScreen(
+                navController = navController,
+                selectedYearBatch = selectedYearBatch
+            )
+        }
+
+        composable(
+            route = "addEditDivisi/{studentEmployeeId}/{divisiId}",
+            arguments = listOf(
+                navArgument("studentEmployeeId") { type = NavType.StringType },
+                navArgument("divisiId") { type = NavType.StringType; nullable = true }
+            )
+        ) { backStackEntry ->
+            val studentEmployeeId = backStackEntry.arguments?.getString("studentEmployeeId")
+            val divisiId = backStackEntry.arguments?.getString("divisiId")
+            if (studentEmployeeId != null) {
+                AddEditDivisiScreen(
+                    navController = navController,
+                    studentEmployeeId = studentEmployeeId,
+                    divisiId = divisiId
+                )
+            } else {
+                Text("Error: Student Employee ID is missing.")
+            }
+        }
+        composable(
+            route = "addEditDivisi/{studentEmployeeId}",
+            arguments = listOf(navArgument("studentEmployeeId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val studentEmployeeId = backStackEntry.arguments?.getString("studentEmployeeId")
+            if (studentEmployeeId != null) {
+                AddEditDivisiScreen(
+                    navController = navController,
+                    studentEmployeeId = studentEmployeeId,
+                    divisiId = null
+                )
+            } else {
+                Text("Error: Student Employee ID is missing for adding divisi.")
+            }
+        }
+
+        composable(
+            route = "kelompokAdmin/{studentEmployeeId}/{divisiId}",
+            arguments = listOf(
+                navArgument("studentEmployeeId") { type = NavType.StringType },
+                navArgument("divisiId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val studentEmployeeId = backStackEntry.arguments?.getString("studentEmployeeId")
+            val divisiId = backStackEntry.arguments?.getString("divisiId")
+            if (studentEmployeeId != null && divisiId != null) {
+                KelompokAdminScreen(
+                    navController = navController,
+                    studentEmployeeId = studentEmployeeId,
+                    divisiId = divisiId
+                )
+            } else {
+                Text("Error: Missing Student Employee ID or Divisi ID for Kelompok Admin.")
+            }
+        }
+
+        composable(
+            route = "addEditKelompok/{studentEmployeeId}/{divisiId}/{kelompokId}",
+            arguments = listOf(
+                navArgument("studentEmployeeId") { type = NavType.StringType },
+                navArgument("divisiId") { type = NavType.StringType },
+                navArgument("kelompokId") { type = NavType.StringType; nullable = true }
+            )
+        ) { backStackEntry ->
+            val studentEmployeeId = backStackEntry.arguments?.getString("studentEmployeeId")
+            val divisiId = backStackEntry.arguments?.getString("divisiId")
+            val kelompokId = backStackEntry.arguments?.getString("kelompokId")
+
+            if (studentEmployeeId != null && divisiId != null) {
+                AddEditKelompokScreen(
+                    navController = navController,
+                    studentEmployeeId = studentEmployeeId,
+                    divisiId = divisiId,
+                    kelompokId = kelompokId
+                )
+            } else {
+                Text("Error: Missing IDs for Add/Edit Kelompok.")
+            }
+        }
+
+        composable(
+            route = "addEditKelompok/{studentEmployeeId}/{divisiId}",
+            arguments = listOf(
+                navArgument("studentEmployeeId") { type = NavType.StringType },
+                navArgument("divisiId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val studentEmployeeId = backStackEntry.arguments?.getString("studentEmployeeId")
+            val divisiId = backStackEntry.arguments?.getString("divisiId")
+            if (studentEmployeeId != null && divisiId != null) {
+                AddEditKelompokScreen(
+                    navController = navController,
+                    studentEmployeeId = studentEmployeeId,
+                    divisiId = divisiId,
+                    kelompokId = null // Explicitly null for add mode
+                )
+            } else {
+                Text("Error: Missing IDs for Add Kelompok.")
+            }
+        }
+
+        composable(
+            route = "addEditAnggota/{studentEmployeeId}/{divisiId}/{kelompokId}/{anggotaId}", // anggotaId is optional for add
+            arguments = listOf(
+                navArgument("studentEmployeeId") { type = NavType.StringType },
+                navArgument("divisiId") { type = NavType.StringType },
+                navArgument("kelompokId") { type = NavType.StringType },
+                navArgument("anggotaId") { type = NavType.StringType; nullable = true }
+            )
+        ) { backStackEntry ->
+            val studentEmployeeId = backStackEntry.arguments?.getString("studentEmployeeId")
+            val divisiId = backStackEntry.arguments?.getString("divisiId")
+            val kelompokId = backStackEntry.arguments?.getString("kelompokId")
+            val anggotaId = backStackEntry.arguments?.getString("anggotaId")
+
+            if (studentEmployeeId != null && divisiId != null && kelompokId != null) {
+                AddEditAnggotaScreen(
+                    navController = navController,
+                    studentEmployeeId = studentEmployeeId,
+                    divisiId = divisiId,
+                    kelompokId = kelompokId,
+                    anggotaId = anggotaId
+                )
+            } else {
+                Text("Error: Missing IDs for Add/Edit Anggota.")
+            }
+        }
+
+        composable(
+            route = "addEditAnggota/{studentEmployeeId}/{divisiId}/{kelompokId}",
+            arguments = listOf(
+                navArgument("studentEmployeeId") { type = NavType.StringType },
+                navArgument("divisiId") { type = NavType.StringType },
+                navArgument("kelompokId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val studentEmployeeId = backStackEntry.arguments?.getString("studentEmployeeId")
+            val divisiId = backStackEntry.arguments?.getString("divisiId")
+            val kelompokId = backStackEntry.arguments?.getString("kelompokId")
+            if (studentEmployeeId != null && divisiId != null && kelompokId != null) {
+                AddEditAnggotaScreen(
+                    navController = navController,
+                    studentEmployeeId = studentEmployeeId,
+                    divisiId = divisiId,
+                    kelompokId = kelompokId,
+                    anggotaId = null
+                )
+            } else {
+                Text("Error: Missing IDs for Add Anggota.")
+            }
         }
 
         composable(Screen.LeadershipAdmin.route) {
@@ -526,9 +783,7 @@ fun AppNavigation(
                 onClickLogin = {
                     FirebaseAuth.getInstance().signOut()
                     navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.HomepageMember.route) {
-                            inclusive = true
-                        }
+                        popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
                     }
                 },
                 onClickProfile = {
@@ -612,38 +867,6 @@ fun AppNavigation(
         }
 
     }
-}
-
-
-
-
-
-@Composable
-fun EventsScreen(
-
-) {
-    Text(text = "Events")
-}
-
-@Composable
-fun NewsScreen(
-
-) {
-    Text(text = "News")
-}
-
-@Composable
-fun ArticlesScreen(
-
-) {
-    Text(text = "Articles")
-}
-
-@Composable
-fun JournalsScreen(
-
-) {
-    Text(text = "Journals")
 }
 
 

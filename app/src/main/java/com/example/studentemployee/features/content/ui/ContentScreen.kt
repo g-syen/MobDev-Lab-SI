@@ -58,13 +58,17 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.studentemployee.core.components.BottomNavBar
+import com.example.studentemployee.core.components.BottomNavBarAdmin
 import com.example.studentemployee.core.components.BottomNavBarMember
 import com.example.studentemployee.features.devotion.model.Devotion
 import com.example.studentemployee.features.events.model.Event
 import com.example.studentemployee.features.news.model.News
 import com.example.studentemployee.features.research.model.Research
 import com.example.studentemployee.features.content.ContentViewModel
+import com.example.studentemployee.features.members.model.User
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,74 +78,13 @@ fun ContentScreen(
     viewModel: ContentViewModel = viewModel(),
     selectedPage: Int? = null
 ) {
+    val _auth = FirebaseAuth.getInstance().currentUser
+    val currentUser by viewModel.user.collectAsState()
     val news by viewModel.news.collectAsState()
     val events by viewModel.event.collectAsState()
     val researches by viewModel.research.collectAsState()
     val devotions by viewModel.devotion.collectAsState()
-    val isLoggedIn = FirebaseAuth.getInstance().currentUser != null
-
-
-    val dummyNews = listOf(
-        News(
-            title = "FILKOM Adakan Seminar Teknologi AI Terkini",
-            date = "2025-04-01",
-            imageUrl = "https://example.com/image1.jpg",
-            link = "https://filkom.ub.ac.id/berita1"
-        ),
-        News(
-            title = "Mahasiswa FILKOM Juara 1 Lomba Data Science Nasional",
-            date = "2025-03-15",
-            imageUrl = "https://example.com/image2.jpg",
-            link = "https://filkom.ub.ac.id/berita2"
-        )
-    )
-
-    val dummyEvents = listOf(
-        Event(
-            title = "Workshop UI/UX Design",
-            date = "2025-04-10",
-            time = "09:00 - 12:00",
-            imageUrl = "https://example.com/event1.jpg",
-            link = "https://filkom.ub.ac.id/event1"
-        ),
-        Event(
-            title = "Pelatihan Android Jetpack Compose",
-            date = "2025-04-20",
-            time = "13:00 - 16:00",
-            imageUrl = "https://example.com/event2.jpg",
-            link = "https://filkom.ub.ac.id/event2"
-        )
-    )
-
-    val dummyResearches = listOf(
-        Research(
-            id = "1",
-            title = "Implementasi Machine Learning untuk Deteksi Penyakit",
-            authors = "Dr. Siti Aisyah, M.Kom",
-            link = "https://filkom.ub.ac.id/research1"
-        ),
-        Research(
-            id = "2",
-            title = "Analisis Big Data untuk Prediksi Kebutuhan Pangan",
-            authors = "Prof. Budi Santoso, Ph.D",
-            link = "https://filkom.ub.ac.id/research2"
-        )
-    )
-
-    val dummyDevotions = listOf(
-        Devotion(
-            id = "1",
-            title = "Pelatihan TIK untuk Guru di Malang",
-            link = "https://filkom.ub.ac.id/devotion1",
-            contributors = "Dewi Kartika, Rina Marlina"
-        ),
-        Devotion(
-            id = "2",
-            title = "Pengenalan Coding untuk Anak-Anak Desa",
-            link = "https://filkom.ub.ac.id/devotion2",
-            contributors = "Andi Wijaya, Siti Nurhaliza"
-        )
-    )
+    val isLoggedIn = _auth != null
 
     val tabs = listOf("Berita", "Event", "Penelitian", "Pengabdian")
 
@@ -186,7 +129,12 @@ fun ContentScreen(
         },
         bottomBar = {
             if (isLoggedIn) {
-                BottomNavBarMember(navController)
+                if(currentUser.role == "admin") {
+                    BottomNavBarAdmin(navController = navController)
+                }
+                else {
+                    BottomNavBarMember(navController)
+                }
             }else{
                 BottomNavBar(navController = navController)
             }

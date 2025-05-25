@@ -269,7 +269,8 @@ fun HomepageMemberScreen(
                 ){
                     Text(
                         text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White
                     )
                 }
             }
@@ -306,7 +307,8 @@ fun HomepageMemberScreen(
                 ){
                     Text(
                         text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White
                     )
                 }
             }
@@ -343,7 +345,8 @@ fun HomepageMemberScreen(
                 ){
                     Text(
                         text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White
                     )
                 }
             }
@@ -380,7 +383,8 @@ fun HomepageMemberScreen(
                 ){
                     Text(
                         text = "Lihat Semua",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White
                     )
                 }
             }

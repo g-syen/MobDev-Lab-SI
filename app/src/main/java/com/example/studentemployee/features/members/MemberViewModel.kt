@@ -21,10 +21,10 @@ class MemberViewModel:ViewModel() {
     val memberList: StateFlow<List<User>> = _memberList
 
     init {
-        fetchLeader()
+        fetchMember()
     }
 
-    private fun fetchLeader(){
+    private fun fetchMember(){
         viewModelScope.launch {
             repository.getMembers().collect(){data ->
                 _memberList.value = data

@@ -24,10 +24,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -47,6 +49,7 @@ import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -60,6 +63,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -78,6 +82,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -95,6 +100,10 @@ import com.example.studentemployee.core.model.BottomNavItem
 import com.example.studentemployee.features.devotion.model.Devotion
 import com.example.studentemployee.features.events.model.Event
 import com.example.studentemployee.features.facilities.model.Facilities
+import com.example.studentemployee.features.members.model.Anggota
+import com.example.studentemployee.features.members.model.Divisi
+import com.example.studentemployee.features.members.model.Kelompok
+import com.example.studentemployee.features.members.model.StudentEmployee
 import com.example.studentemployee.features.news.model.News
 import com.example.studentemployee.features.research.model.Research
 import com.example.studentemployee.features.teaching.model.Teaching
@@ -226,15 +235,15 @@ fun LeadershipCard(modifier: Modifier = Modifier, leader: Leader, navController:
         navController.navigate("personalmember/${personalId}")
     }
 
-    RoundedCard (
+    RoundedCard(
         modifier = Modifier.clickable {
             onClickViewPersonal(leader.id)
             Log.d("RoundedCard", "Card clicked!")
         }
 
-    ){
-        Row(verticalAlignment = Alignment.CenterVertically, ) {
-            Column(modifier=Modifier.weight(1f)) {
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     leader.position,
                     fontSize = 14.sp,
@@ -264,23 +273,23 @@ fun LeadershipAdminCard(
     modifier: Modifier = Modifier,
     leader: Leader,
     navController: NavController,
-    onClickEdit : (Leader) -> Unit,
-    onClickDelete : (Leader) -> Unit
+    onClickEdit: (Leader) -> Unit,
+    onClickDelete: (Leader) -> Unit
 ) {
 
     fun onClickViewPersonal(personalId: String) {
         navController.navigate("personalmember/${personalId}")
     }
 
-    RoundedCard (
+    RoundedCard(
         modifier = Modifier.clickable {
             onClickViewPersonal(leader.id)
             Log.d("RoundedCard", "Card clicked!")
         }
 
-    ){
-        Row(verticalAlignment = Alignment.CenterVertically, ) {
-            Column(modifier=Modifier.weight(1f)) {
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     leader.position,
                     fontSize = 14.sp,
@@ -296,7 +305,8 @@ fun LeadershipAdminCard(
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton (onClick = { onClickEdit(leader) },
+                IconButton(
+                    onClick = { onClickEdit(leader) },
                     modifier = Modifier
                         .padding(end = 8.dp)
                 ) {
@@ -306,7 +316,8 @@ fun LeadershipAdminCard(
                         tint = Color.Gray
                     )
                 }
-                IconButton (onClick = { onClickDelete(leader) },
+                IconButton(
+                    onClick = { onClickDelete(leader) },
                     modifier = Modifier
                         .padding(end = 8.dp)
                 ) {
@@ -328,14 +339,14 @@ fun MemberCard(modifier: Modifier = Modifier, member: User, navController: NavCo
         navController.navigate("personalmember/${personalId}")
     }
 
-    RoundedCard (
+    RoundedCard(
         modifier = Modifier.clickable {
             onClickViewPersonal(member.id)
             Log.d("RoundedCard", "Card clicked!")
         }
 
-    ){
-        Row(verticalAlignment = Alignment.CenterVertically, ) {
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 member.nama,
                 fontSize = 16.sp,
@@ -354,26 +365,401 @@ fun MemberCard(modifier: Modifier = Modifier, member: User, navController: NavCo
 }
 
 @Composable
+fun StudentEmployeeCard(studemp: StudentEmployee, navController: NavController) {
+
+    fun onClickViewDivision(yearBatch: String) {
+        navController.navigate("divisi/${yearBatch}")
+    }
+
+    RoundedCard(
+        modifier = Modifier.clickable {
+            onClickViewDivision("${studemp.year}${studemp.batch}")
+            Log.d("RoundedCard", "Card clicked!")
+        }
+
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                "Student Employee ${studemp.year} (Batch ${studemp.batch})",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xff195693),
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = "Expand",
+                modifier = Modifier.size(24.dp),
+                tint = Color(0xffF37619)
+            )
+        }
+    }
+}
+
+@Composable
+fun StudentEmployeeCardAdmin(
+    studemp: StudentEmployee,
+    navController: NavController,
+    onEdit: (String) -> Unit,
+    onDelete: (String) -> Unit
+) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    fun onClickViewDivisionAdmin(yearBatch: String) {
+        navController.navigate("divisiadmin/${yearBatch}")
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Confirm Deletion") },
+            text = { Text("Are you sure you want to delete Student Employee ${studemp.year} (Batch ${studemp.batch})?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    studemp.id?.let { onDelete(it) }
+                    showDeleteDialog = false
+                }) {
+                    Text("Delete", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    RoundedCard(
+        modifier = Modifier.fillMaxWidth().height(70.dp).clickable {
+            onClickViewDivisionAdmin("${studemp.year}${studemp.batch}")
+        }
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                "Student Employee ${studemp.year} (Batch ${studemp.batch})",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xff195693),
+                modifier = Modifier.weight(1f)
+            )
+            IconButton(onClick = { studemp.id?.let { onEdit(it) } }) {
+                Icon(Icons.Filled.Edit, "Edit")
+            }
+            IconButton(onClick = { showDeleteDialog = true }) {
+                Icon(Icons.Filled.Delete, "Delete")
+            }
+        }
+    }
+}
+
+@Composable
+fun DivisiCard(divisi: Divisi, studemp: StudentEmployee, navController: NavController) {
+
+    fun onClickViewKelompok(studemp: String, divisi: String) {
+        navController.navigate("kelompok/${studemp},${divisi}")
+    }
+
+    RoundedCard(
+        modifier = Modifier.clickable {
+            divisi.id?.let { studemp.id?.let { it1 -> onClickViewKelompok(it1, it) } }
+            Log.d("RoundedCard", "Card clicked!")
+        }
+
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            divisi.divisi?.let {
+                Text(
+                    it,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xff195693),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = "Expand",
+                modifier = Modifier.size(24.dp),
+                tint = Color(0xffF37619)
+            )
+        }
+    }
+}
+
+@Composable
+fun DivisiAdminCard(
+    divisi: Divisi,
+    studemp: StudentEmployee,
+    onEdit: (Divisi) -> Unit,
+    onDelete: (Divisi) -> Unit,
+    navController: NavController
+) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    fun onClickViewKelompokAdmin(studemp: String, divisi: String) {
+        navController.navigate("kelompokAdmin/${studemp}/${divisi}")
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Confirm Deletion") },
+            text = { Text("Are you sure you want to delete Divisi '${divisi.divisi ?: "N/A"}'?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDelete(divisi)
+                    showDeleteDialog = false
+                }) {
+                    Text("Delete", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    RoundedCard(
+        modifier = Modifier.fillMaxWidth().height(80.dp).clickable {
+            divisi.id?.let { studemp.id?.let { it1 -> onClickViewKelompokAdmin(studemp = it1, divisi = it) } }
+        }
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 4.dp, horizontal = 4.dp)
+        ) {
+            Text(
+                text = divisi.divisi ?: "Unnamed Division",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xff195693),
+                modifier = Modifier.weight(1f)
+            )
+            IconButton(onClick = { onEdit(divisi) }) {
+                Icon(Icons.Filled.Edit, "Edit Divisi")
+            }
+            IconButton(onClick = { showDeleteDialog = true }) {
+                Icon(Icons.Filled.Delete, "Delete Divisi")
+            }
+        }
+    }
+}
+
+@Composable
+fun KelompokAdminCard(
+    kelompok: Kelompok,
+    onEdit: (Kelompok) -> Unit,
+    onDelete: (Kelompok) -> Unit,
+    onManageAnggota: (Kelompok) -> Unit // For future Anggota management
+) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Confirm Deletion") },
+            text = { Text("Are you sure you want to delete Kelompok ${kelompok.kelompok?.toInt() ?: "N/A"}'?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDelete(kelompok)
+                    showDeleteDialog = false
+                }) {
+                    Text("Delete", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    RoundedCard(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp)
+        ) {
+            Text(
+                text = "Kelompok ${kelompok.kelompok?.toInt() ?: "N/A"}",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xff195693),
+                modifier = Modifier.weight(1f)
+            )
+            // Optional: Button to manage Anggota
+            // IconButton(onClick = { onManageAnggota(kelompok) }) {
+            //     Icon(Icons.Filled.People, "Manage Anggota", tint = Color.Gray)
+            // }
+            IconButton(onClick = { onEdit(kelompok) }) {
+                Icon(Icons.Filled.Edit, "Edit Kelompok", tint = Color(0xFFE2640D))
+            }
+            IconButton(onClick = { showDeleteDialog = true }) {
+                Icon(Icons.Filled.Delete, "Delete Kelompok", tint = Color.Red)
+            }
+        }
+    }
+}
+
+@Composable
+fun AnggotaAdminCard(
+    anggota: Anggota,
+    onEdit: (Anggota) -> Unit,
+    onDelete: (Anggota) -> Unit
+) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Confirm Deletion") },
+            text = { Text("Are you sure you want to delete Anggota '${anggota.nama ?: "N/A"}' (NIM: ${anggota.nim ?: "N/A"})?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDelete(anggota)
+                    showDeleteDialog = false
+                }) { Text("Delete", color = Color.Red) }
+            },
+            dismissButton = { TextButton(onClick = { showDeleteDialog = false }) { Text("Cancel") } }
+        )
+    }
+
+    var initials: String? = null
+    if(anggota.nama!= null) {
+        initials = anggota.nama
+            .split(" ")
+            .filter { it.isNotBlank() && it.length > 0 }
+            .mapNotNull { it.firstOrNull()?.uppercaseChar()?.toString() }
+            .take(2)
+            .joinToString("")
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp, horizontal = 4.dp),
+        backgroundColor = Color.White
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .background(Color(0XFFEAEAEA)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (initials != null) {
+                        Text(
+                            initials,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0XFF195693)
+                        )
+                    }
+                }
+                Text(
+                    text = anggota.nama ?: "No Name",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "NIM: ${anggota.nim ?: "N/A"}",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            IconButton(onClick = { onEdit(anggota) }) {
+                Icon(Icons.Filled.Edit, "Edit Anggota", tint = Color(0xFF007BFF)) // Blue for edit
+            }
+            IconButton(onClick = { showDeleteDialog = true }) {
+                Icon(Icons.Filled.Delete, "Delete Anggota", tint = Color.Red)
+            }
+        }
+    }
+}
+
+
+@Composable
+fun KelompokCard(kelompok: Kelompok) {
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Box(modifier = Modifier.fillMaxWidth().height(48.dp).background(Color(0xFF048DC8)), contentAlignment = Alignment.Center) {
+            Text(text = "Kelompok ${kelompok.kelompok?.toInt().toString()}" ,textAlign = TextAlign.Center, style = TextStyle(fontSize = 16.sp), color = Color.White)
+        }
+        kelompok.anggota.forEach { anggota ->
+            var initials: String? = null
+            if(anggota.nama!= null) {
+                initials = anggota.nama
+                    .split(" ")
+                    .filter { it.isNotBlank() && it.length > 0 }
+                    .mapNotNull { it.firstOrNull()?.uppercaseChar()?.toString() }
+                    .take(2)
+                    .joinToString("")
+            }
+
+            Row (
+              modifier = Modifier.padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .background(Color(0XFFEAEAEA)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (initials != null) {
+                        Text(
+                            initials,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0XFF195693)
+                        )
+                    }
+                }
+                Column (
+                    modifier = Modifier.padding(10.dp)
+                ){
+                    anggota.nama?.let { Text(text = it, textAlign = TextAlign.Left, color = Color(0xFF195693), fontSize = 16.sp, fontWeight = FontWeight.Bold) }
+                    anggota.nim?.let { Text (text = it, textAlign = TextAlign.Left, fontSize = 16.sp)}
+                }
+            }
+            Divider(thickness = 1.dp, color = Color(0xFF195693))
+        }
+    }
+}
+
+@Composable
 fun MemberAdminCard(
     modifier: Modifier = Modifier,
     member: User,
     navController: NavController,
-    onClickEdit : (User) -> Unit,
-    onClickDelete : (User) -> Unit
+    onClickEdit: (User) -> Unit,
+    onClickDelete: (User) -> Unit
 ) {
 
     fun onClickViewPersonal(personalId: String) {
         navController.navigate("personalmember/${personalId}")
     }
 
-    RoundedCard (
+    RoundedCard(
         modifier = Modifier.clickable {
             onClickViewPersonal(member.id)
             Log.d("RoundedCard", "Card clicked!")
         }
 
-    ){
-        Row(verticalAlignment = Alignment.CenterVertically, ) {
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 member.nama,
                 fontSize = 16.sp,
@@ -382,7 +768,8 @@ fun MemberAdminCard(
                 modifier = Modifier.weight(1f)
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton (onClick = { onClickEdit(member) },
+                IconButton(
+                    onClick = { onClickEdit(member) },
                     modifier = Modifier
                         .padding(end = 8.dp)
                 ) {
@@ -392,7 +779,8 @@ fun MemberAdminCard(
                         tint = Color.Gray
                     )
                 }
-                IconButton (onClick = { onClickDelete(member) },
+                IconButton(
+                    onClick = { onClickDelete(member) },
                     modifier = Modifier
                         .padding(end = 8.dp)
                 ) {
@@ -414,7 +802,7 @@ fun SearchBar(
     label: String,
     modifier: Modifier = Modifier,
     onSearch: () -> Unit
-){
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Card(
@@ -453,7 +841,13 @@ fun SearchBar(
 @Preview
 @Composable
 private fun LeadershipCardPreview() {
-    LeadershipCard(leader = Leader(id = "1", name = "Riswan Septriayadi Sianturi, S.Si.., MM., M.Sc., Ph.D.", position = "Kepala Lab"), navController = rememberNavController())
+    LeadershipCard(
+        leader = Leader(
+            id = "1",
+            name = "Riswan Septriayadi Sianturi, S.Si.., MM., M.Sc., Ph.D.",
+            position = "Kepala Lab"
+        ), navController = rememberNavController()
+    )
 }
 
 @Composable
@@ -497,7 +891,7 @@ fun FacilitiesAdminCard(
     facilities: Facilities,
     onDelete: (Facilities) -> Unit,
     onEdit: (Facilities) -> Unit
-){
+) {
     val context = LocalContext.current
     ElevatedCard(
         modifier = Modifier
@@ -543,7 +937,8 @@ fun FacilitiesAdminCard(
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton (onClick = { onEdit(facilities) },
+                IconButton(
+                    onClick = { onEdit(facilities) },
                     modifier = Modifier
                         .padding(end = 8.dp)
                 ) {
@@ -553,7 +948,8 @@ fun FacilitiesAdminCard(
                         tint = Color.Gray
                     )
                 }
-                IconButton (onClick = { onDelete(facilities) },
+                IconButton(
+                    onClick = { onDelete(facilities) },
                     modifier = Modifier
                         .padding(end = 8.dp)
                 ) {
@@ -615,7 +1011,12 @@ fun BottomNavBarMember(navController: NavController) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         items.forEach { item ->
             NavigationBarItem(
-                icon = { androidx.compose.material3.Icon(imageVector = item.icon, contentDescription = item.label) },
+                icon = {
+                    androidx.compose.material3.Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.label
+                    )
+                },
                 label = { androidx.compose.material3.Text(item.label) },
                 selected = currentRoute == item.route,
                 onClick = { navController.navigate(item.route) },
@@ -645,7 +1046,12 @@ fun BottomNavBarAdmin(navController: NavController) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         items.forEach { item ->
             NavigationBarItem(
-                icon = { androidx.compose.material3.Icon(imageVector = item.icon, contentDescription = item.label) },
+                icon = {
+                    androidx.compose.material3.Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.label
+                    )
+                },
                 label = { androidx.compose.material3.Text(item.label) },
                 selected = currentRoute == item.route,
                 onClick = { navController.navigate(item.route) },
@@ -666,7 +1072,7 @@ fun BottomNavBarAdmin(navController: NavController) {
 fun FeatureItem(
     icon: ImageVector,
     title: String,
-    onClickButton : () -> Unit
+    onClickButton: () -> Unit
 ) {
     androidx.compose.material3.Card(
         modifier = Modifier.size(54.dp),
@@ -701,9 +1107,9 @@ fun EventCard(
     editDelete: Boolean = false,
     onEditEvent: () -> Unit = {},
     onDeleteEvent: () -> Unit = {}
-){
+) {
     val context = LocalContext.current
-    if(axis)
+    if (axis)
         ElevatedCard(
             modifier = Modifier
                 .width(180.dp)
@@ -835,10 +1241,10 @@ fun NewsCard(
     editDelete: Boolean = false,
     onEditNews: () -> Unit = {},
     onDeleteNews: () -> Unit = {}
-){
+) {
     val context = LocalContext.current
 
-    if(axis)
+    if (axis)
         ElevatedCard(
             modifier = Modifier
                 .width(180.dp)
@@ -966,7 +1372,7 @@ fun NewsCard(
 fun TeachingCard(
     teaching: Teaching,
     modifier: Modifier = Modifier
-){
+) {
     val context = LocalContext.current
     ElevatedCard(
         modifier = modifier
@@ -998,7 +1404,7 @@ fun TeachingCard(
 fun ResearchSmallCard(
     research: Research,
     modifier: Modifier = Modifier
-){
+) {
     val context = LocalContext.current
     ElevatedCard(
         modifier = modifier
@@ -1034,7 +1440,7 @@ fun ResearchSmallCard(
 fun ResearchCard(
     research: Research,
     modifier: Modifier = Modifier
-){
+) {
     val context = LocalContext.current
     ElevatedCard(
         modifier = modifier
@@ -1070,7 +1476,7 @@ fun ResearchCard(
 fun DevotionCard(
     devotion: Devotion,
     modifier: Modifier = Modifier
-){
+) {
     val context = LocalContext.current
     ElevatedCard(
         modifier = modifier
@@ -1105,7 +1511,7 @@ fun DevotionCard(
 @Composable
 fun FacilitiesCard(
     facilities: Facilities
-){
+) {
     val context = LocalContext.current
     ElevatedCard(
         modifier = Modifier
@@ -1152,9 +1558,10 @@ fun FacilitiesCard(
 fun TabSection(selectedTab: String, onTabSelected: (String) -> Unit) {
 
     Column {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -1164,7 +1571,9 @@ fun TabSection(selectedTab: String, onTabSelected: (String) -> Unit) {
                     Button(
                         onClick = { onTabSelected(tab) },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selectedTab == tab) Color(0xFFFF6A00) else Color(0xFF426193)
+                            containerColor = if (selectedTab == tab) Color(0xFFFF6A00) else Color(
+                                0xFF426193
+                            )
                         ),
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier
@@ -1186,18 +1595,21 @@ fun TabSection(selectedTab: String, onTabSelected: (String) -> Unit) {
 
 @Composable
 fun PenelitianContent(researches: List<Research>) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(400.dp)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp)
     ) {
         if (researches.isEmpty()) {
             Text("Penelitian tidak tersedia", modifier = Modifier.padding(16.dp))
         } else {
             LazyColumn {
                 items(researches) { research ->
-                    ResearchCard(research, modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp))
+                    ResearchCard(
+                        research, modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
                 }
             }
         }
@@ -1207,18 +1619,21 @@ fun PenelitianContent(researches: List<Research>) {
 
 @Composable
 fun PengajaranContent(teachings: List<Teaching>) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(400.dp)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp)
     ) {
         if (teachings.isEmpty()) {
             Text("Pengajaran tidak tersedia", modifier = Modifier.padding(16.dp))
         } else {
             LazyColumn {
                 items(teachings) { teaching ->
-                    TeachingCard(teaching, modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp))
+                    TeachingCard(
+                        teaching, modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
                 }
             }
         }
@@ -1227,18 +1642,21 @@ fun PengajaranContent(teachings: List<Teaching>) {
 
 @Composable
 fun PengabdianContent(devotions: List<Devotion>) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(400.dp)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(400.dp)
     ) {
         if (devotions.isEmpty()) {
             Text("Pengabdian tidak tersedia", modifier = Modifier.padding(16.dp))
         } else {
             LazyColumn {
                 items(devotions) { devotions ->
-                    DevotionCard(devotions, modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp))
+                    DevotionCard(
+                        devotions, modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
                 }
             }
         }
@@ -1246,7 +1664,7 @@ fun PengabdianContent(devotions: List<Devotion>) {
 }
 
 @Composable
-fun CardMenu(modifier: Modifier = Modifier, text: String, icon: ImageVector,onClick: () -> Unit) {
+fun CardMenu(modifier: Modifier = Modifier, text: String, icon: ImageVector, onClick: () -> Unit) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -1297,12 +1715,18 @@ fun LogoutConfirmationDialog(
         title = { Text("Confirm Logout", color = Color(0xFFF37619), fontWeight = FontWeight.Bold) },
         text = { Text("Are you sure you want to log out?") },
         confirmButton = {
-            Button(onClick = onConfirm, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))) {
+            Button(
+                onClick = onConfirm,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF048dc8))
+            ) {
                 Text("Yes", color = Color.White)
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = Color.White)) {
+            OutlinedButton(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+            ) {
                 Text("Cancel")
             }
         },
@@ -1323,7 +1747,8 @@ fun DatePickerDialogExample(selectedDate: String, onDateSelected: (String) -> Un
         context,
         R.style.CustomDatePickerDialog,
         { _, selectedYear, selectedMonth, selectedDay ->
-            val formattedDate = String.format("%02d-%02d-%04d", selectedDay, selectedMonth + 1, selectedYear)
+            val formattedDate =
+                String.format("%02d-%02d-%04d", selectedDay, selectedMonth + 1, selectedYear)
             onDateSelected(formattedDate)
         },
         year, month, day

@@ -1,6 +1,5 @@
 package com.example.studentemployee.screen
 
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

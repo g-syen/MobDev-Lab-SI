@@ -18,7 +18,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "search_history_db"
+                    "search_history"
                 ).build()
                 INSTANCE = instance
                 instance
