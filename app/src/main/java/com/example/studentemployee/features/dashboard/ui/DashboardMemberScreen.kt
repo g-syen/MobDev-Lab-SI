@@ -1,4 +1,4 @@
-package com.example.studentemployee.features.menu.ui
+package com.example.studentemployee.features.dashboard.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -110,22 +110,22 @@ fun MenuMemberScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             CardMenu(
-                text = "Tambahkan Penelitian",
+                text = "Kelola Penelitian",
                 icon = Icons.Default.Biotech,
                 onClick = {navController.navigate(Screen.AddEditResearch.route)}
             )
             CardMenu(
-                text = "Tambahkan Pengabdian",
+                text = "Kelola Pengabdian",
                 icon = Icons.Default.Handshake,
                 onClick = {navController.navigate(Screen.AddEditDevotion.route)}
             )
             CardMenu(
-                text = "Tambahkan Pengajaran",
+                text = "Kelola Pengajaran",
                 icon = Icons.Default.MenuBook,
                 onClick = {navController.navigate(Screen.AddEditTeaching.route)}
             )
             CardMenu(
-                text = "Ganti Password",
+                text = "Ubah Kata Sandi",
                 icon = Icons.Default.LockPerson,
                 onClick = {navController.navigate(Screen.ChangePassword.route)}
             )

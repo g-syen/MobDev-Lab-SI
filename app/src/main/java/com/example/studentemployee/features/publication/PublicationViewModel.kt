@@ -1,4 +1,4 @@
-package com.example.studentemployee.features.content
+package com.example.studentemployee.features.publication
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ContentViewModel:ViewModel() {
+class PublicationViewModel:ViewModel() {
     private val repository = FirestoreRepository()
     private val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
 

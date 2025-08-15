@@ -2,6 +2,8 @@ package com.example.studentemployee.features.members.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Save
@@ -109,7 +111,7 @@ fun AddEditAnggotaScreen(
         containerColor = Color.White
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues).padding(16.dp).fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(paddingValues).imePadding().verticalScroll(rememberScrollState()).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

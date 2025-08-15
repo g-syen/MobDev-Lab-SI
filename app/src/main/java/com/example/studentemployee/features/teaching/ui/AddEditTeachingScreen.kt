@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -282,7 +283,7 @@ fun AddEditTeachingScreen(
                 fontWeight = FontWeight.Bold,
                 color = Color(0XFFF37619)
             )
-            LazyColumn(modifier = modifier.padding(horizontal = 24.dp)) {
+            LazyColumn(modifier = modifier.imePadding().padding(horizontal = 24.dp)) {
                 items(userTeachings) { teaching ->
                     TeachingCard(
                         teaching = teaching,

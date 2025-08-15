@@ -23,13 +23,12 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.studentemployee.features.admin.ui.KelompokAdminScreen
 import com.example.studentemployee.features.members.ui.MemberAdminScreen
 import com.example.studentemployee.features.auth.ui.LoginScreen
-import com.example.studentemployee.features.content.ui.ContentScreen
+import com.example.studentemployee.features.publication.ui.ContentScreen
 import com.example.studentemployee.features.devotion.ui.AddEditDevotionScreen
 import com.example.studentemployee.features.events.ui.AddEditEventScreen
 import com.example.studentemployee.features.facilities.ui.AddEditFacilityScreen
@@ -45,7 +44,6 @@ import com.example.studentemployee.features.profile.ui.EditProfileScreen
 import com.example.studentemployee.features.profile.ui.ProfileScreen
 import com.example.studentemployee.features.leadership.LeaderViewModel
 import com.example.studentemployee.features.members.ui.AddEditMemberScreen
-import com.example.studentemployee.features.members.ui.MemberAdminScreen
 import com.example.studentemployee.features.members.ui.MemberScreen
 import com.example.studentemployee.features.members.MemberViewModel
 import com.example.studentemployee.features.members.StudentEmployeeViewModel
@@ -56,8 +54,8 @@ import com.example.studentemployee.features.members.ui.AddEditStudentEmployeeScr
 import com.example.studentemployee.features.members.ui.DivisiScreen
 import com.example.studentemployee.features.members.ui.KelompokScreen
 import com.example.studentemployee.features.members.ui.PersonalMemberScreen
-import com.example.studentemployee.features.menu.ui.MenuAdminScreen
-import com.example.studentemployee.features.menu.ui.MenuMemberScreen
+import com.example.studentemployee.features.dashboard.ui.MenuAdminScreen
+import com.example.studentemployee.features.dashboard.ui.MenuMemberScreen
 import com.example.studentemployee.features.news.ui.AddEditNewsScreen
 import com.example.studentemployee.features.profilelab.ui.ProfileLabScreen
 import com.example.studentemployee.features.research.ui.AddEditResearchScreen
@@ -211,7 +209,15 @@ fun AppNavigation(
         }
 
         composable(Screen.Content.route) {
-            ContentScreen(navController = navController)
+            ContentScreen(
+                onClickLogin = {
+                    FirebaseAuth.getInstance().signOut()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
+                    }
+                },
+                navController = navController
+            )
         }
 
         composable("content/{contentId}") { backStackEntry ->
@@ -220,6 +226,12 @@ fun AppNavigation(
             contentId?.let {
                 ContentScreen(
                     navController = navController,
+                    onClickLogin = {
+                        FirebaseAuth.getInstance().signOut()
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.HomepageAdmin.route) { inclusive = true }
+                        }
+                    },
                     selectedPage = it
                 )
             } ?: run {

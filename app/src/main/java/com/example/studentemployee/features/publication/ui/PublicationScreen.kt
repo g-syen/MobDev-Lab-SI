@@ -1,4 +1,4 @@
-package com.example.studentemployee.features.content.ui
+package com.example.studentemployee.features.publication.ui
 
 import android.content.Intent
 import android.net.Uri
@@ -40,7 +40,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,26 +63,26 @@ import coil.compose.AsyncImage
 import com.example.studentemployee.core.components.BottomNavBar
 import com.example.studentemployee.core.components.BottomNavBarAdmin
 import com.example.studentemployee.core.components.BottomNavBarMember
+import com.example.studentemployee.core.components.LogoutConfirmationDialog
 import com.example.studentemployee.features.devotion.model.Devotion
 import com.example.studentemployee.features.events.model.Event
 import com.example.studentemployee.features.news.model.News
 import com.example.studentemployee.features.research.model.Research
-import com.example.studentemployee.features.content.ContentViewModel
-import com.example.studentemployee.features.members.model.User
-import com.google.firebase.Firebase
+import com.example.studentemployee.features.publication.PublicationViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentScreen(
     navController: NavController,
-    viewModel: ContentViewModel = viewModel(),
+    viewModel: PublicationViewModel = viewModel(),
+    onClickLogin: () -> Unit,
     selectedPage: Int? = null
 ) {
     val _auth = FirebaseAuth.getInstance().currentUser
     val currentUser by viewModel.user.collectAsState()
+    var showLogoutDialog by remember { mutableStateOf(false) }
     val news by viewModel.news.collectAsState()
     val events by viewModel.event.collectAsState()
     val researches by viewModel.research.collectAsState()
@@ -99,7 +102,7 @@ fun ContentScreen(
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             IconButton(
-                                onClick = { },
+                                onClick = { showLogoutDialog = true },
                                 modifier = Modifier
                                     .padding(end = 8.dp)
                                     .clip(RoundedCornerShape(8.dp))
@@ -141,6 +144,12 @@ fun ContentScreen(
         },
         contentColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
+        if(showLogoutDialog) {
+            LogoutConfirmationDialog(
+                onConfirm = onClickLogin,
+                onDismiss = { showLogoutDialog = false }
+            )
+        }
         val scope = rememberCoroutineScope()
         val pagerState = rememberPagerState(pageCount = { tabs.size })
 
@@ -204,7 +213,7 @@ fun ContentScreen(
 @Preview
 @Composable
 private fun ContentScreenPreview() {
-    ContentScreen(navController = rememberNavController())
+    ContentScreen(navController = rememberNavController(), onClickLogin = {})
 }
 
 @Composable

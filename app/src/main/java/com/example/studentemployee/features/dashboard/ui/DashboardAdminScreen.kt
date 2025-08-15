@@ -1,4 +1,4 @@
-package com.example.studentemployee.features.menu.ui
+package com.example.studentemployee.features.dashboard.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -109,12 +109,12 @@ fun MenuAdminScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             CardMenu(
-                text = "Tambahkan Event",
+                text = "Kelola Event",
                 icon = Icons.Default.CalendarToday,
                 onClick = onClickAddEvent
             )
             CardMenu(
-                text = "Tambahkan Berita",
+                text = "Kelola Berita",
                 icon = Icons.Default.Newspaper,
                 onClick = onClickAddNews
             )

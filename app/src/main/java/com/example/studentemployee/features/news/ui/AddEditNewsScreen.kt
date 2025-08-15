@@ -46,7 +46,9 @@ fun AddEditNewsScreen(
     var titleError by remember { mutableStateOf(false) }
     var dateError by remember { mutableStateOf(false) }
     var imageUrlError by remember { mutableStateOf(false) }
+    var imageUrlInvalid by remember { mutableStateOf(false) }
     var linkError by remember { mutableStateOf(false) }
+    var linkInvalid by remember { mutableStateOf(false) }
 
     var isEdit by remember {mutableStateOf(false)}
     var newsList by remember { mutableStateOf(emptyList<News>())}
@@ -118,6 +120,7 @@ fun AddEditNewsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .imePadding()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -295,14 +298,24 @@ fun AddEditNewsScreen(
                         onClick = {
                             titleError = newsTitle.isBlank()
                             dateError = selectedDate.isBlank()
-                            linkError = link.isBlank() || !isValidUrl(link)
+                            linkError = link.isBlank()
+                            linkInvalid = !isValidUrl(link)
                             imageUrlError =
-                                imageUrl.isBlank() || !isValidUrl(imageUrl)
+                                imageUrl.isBlank()
+                            imageUrlInvalid = !isValidUrl(imageUrl)
 
                             if (titleError || dateError || linkError || imageUrlError) {
                                 Toast.makeText(
                                     context,
                                     "Mohon lengkapi semua field dengan benar.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@CustomButton
+                            }
+                            if (linkInvalid || imageUrlInvalid) {
+                                Toast.makeText(
+                                    context,
+                                    "Mohon mulai semua link dengan \"http\" atau \"https\".",
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 return@CustomButton
@@ -378,7 +391,10 @@ fun AddEditNewsScreen(
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                LazyColumn {
+                LazyColumn (
+                    modifier = Modifier.imePadding()
+                )
+                {
                     items(newsList) { result ->
                         NewsCard(
                             news = result,
@@ -394,7 +410,7 @@ fun AddEditNewsScreen(
                                     onSuccess = {
                                         Toast.makeText(
                                             context,
-                                            "Berhasil diupdate",
+                                            "Berhasil dihapus",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                         clearField()

@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.studentemployee.core.components.RoundedCard
-import com.example.studentemployee.features.content.ContentViewModel
+import com.example.studentemployee.features.publication.PublicationViewModel
 
 data class StatsItem(
     val label: String,
@@ -45,7 +45,7 @@ data class StatsItem(
 @Composable
 fun StatisticsScreen(
     navController: NavController,
-    viewModel: ContentViewModel = viewModel()
+    viewModel: PublicationViewModel = viewModel()
 ) {
     val newsCount = viewModel.news.collectAsState().value.size
     val eventCount = viewModel.event.collectAsState().value.size

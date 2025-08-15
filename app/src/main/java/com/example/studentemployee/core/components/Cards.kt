@@ -108,6 +108,7 @@ import com.example.studentemployee.features.news.model.News
 import com.example.studentemployee.features.research.model.Research
 import com.example.studentemployee.features.teaching.model.Teaching
 import com.example.studentemployee.features.members.model.User
+import com.example.studentemployee.features.profile.ui.CustomButton
 import java.util.Calendar
 
 
@@ -969,7 +970,7 @@ fun BottomNavBar(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, "homepageguest"),
         BottomNavItem("Search", Icons.Default.Search, "searchguest"),
-        BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "content")
+        BottomNavItem("Publikasi", Icons.AutoMirrored.Filled.MenuBook, "content")
     )
 
     NavigationBar(containerColor = Color(0xFF19253F)) {
@@ -1001,9 +1002,9 @@ fun BottomNavBar(navController: NavController) {
 fun BottomNavBarMember(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, "homepagemember"),
-        BottomNavItem("Menu", Icons.Default.Widgets, "menumember"),
+        BottomNavItem("Dashboard", Icons.Default.Widgets, "menumember"),
         BottomNavItem("Search", Icons.Default.Search, "searchmember"),
-        BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "content"),
+        BottomNavItem("Publikasi", Icons.AutoMirrored.Filled.MenuBook, "content"),
         BottomNavItem("Profil", Icons.Outlined.AccountBox, "profile")
     )
 
@@ -1036,10 +1037,9 @@ fun BottomNavBarMember(navController: NavController) {
 fun BottomNavBarAdmin(navController: NavController) {
     val items = listOf(
         BottomNavItem("Home", Icons.Default.Home, "homepageadmin"),
-        BottomNavItem("Menu", Icons.Default.Widgets, "menuadmin"),
+        BottomNavItem("Dashboard", Icons.Default.Widgets, "menuadmin"),
         BottomNavItem("Search", Icons.Default.Search, "searchadmin"),
-        BottomNavItem("Konten", Icons.AutoMirrored.Filled.MenuBook, "content"),
-        BottomNavItem("Profil", Icons.Outlined.AccountBox, "profile")
+        BottomNavItem("Publikasi", Icons.AutoMirrored.Filled.MenuBook, "content"),
     )
 
     NavigationBar(containerColor = Color(0xFF19253F)) {
@@ -1594,7 +1594,23 @@ fun TabSection(selectedTab: String, onTabSelected: (String) -> Unit) {
 }
 
 @Composable
-fun PenelitianContent(researches: List<Research>) {
+fun PenelitianContent(
+    researches: List<Research>,
+    kelolaPenelitian: String = "",
+    navController: NavController? = null
+) {
+    if(kelolaPenelitian.isNotBlank() || kelolaPenelitian.isNotEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        ) {
+            CustomButton(
+                onClick = { navController?.navigate(kelolaPenelitian) },
+                text = "Kelola Penelitian"
+            )
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -1618,7 +1634,23 @@ fun PenelitianContent(researches: List<Research>) {
 
 
 @Composable
-fun PengajaranContent(teachings: List<Teaching>) {
+fun PengajaranContent(
+    teachings: List<Teaching>,
+    kelolaPengajaran: String = "",
+    navController: NavController? = null
+) {
+    if(kelolaPengajaran.isNotBlank() || kelolaPengajaran.isNotEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        ) {
+            CustomButton(
+                onClick = { navController?.navigate(kelolaPengajaran) },
+                text = "Kelola Pengajaran"
+            )
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -1641,7 +1673,23 @@ fun PengajaranContent(teachings: List<Teaching>) {
 }
 
 @Composable
-fun PengabdianContent(devotions: List<Devotion>) {
+fun PengabdianContent(
+    devotions: List<Devotion>,
+    kelolaPengabdian: String = "",
+    navController: NavController? = null
+) {
+    if(kelolaPengabdian.isNotBlank() || kelolaPengabdian.isNotEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+        ) {
+            CustomButton(
+                onClick = { navController?.navigate(kelolaPengabdian) },
+                text = "Kelola Pengabdian"
+            )
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -1713,7 +1761,7 @@ fun LogoutConfirmationDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Confirm Logout", color = Color(0xFFF37619), fontWeight = FontWeight.Bold) },
-        text = { Text("Are you sure you want to log out?") },
+        text = { Text("Are you sure you want to log out?", color = Color.Black) },
         confirmButton = {
             Button(
                 onClick = onConfirm,
@@ -1727,7 +1775,7 @@ fun LogoutConfirmationDialog(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.White)
             ) {
-                Text("Cancel")
+                Text("Cancel", color = Color.Black)
             }
         },
         containerColor = Color.White

@@ -103,7 +103,7 @@ fun ProfileScreen(
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             IconButton(
-                                onClick = { },
+                                onClick = { showLogoutDialog = true },
                                 modifier = Modifier
                                     .padding(end = 8.dp)
                                     .clip(RoundedCornerShape(8.dp))
@@ -198,9 +198,9 @@ fun ProfileScreen(
             }
 
             when (selectedTab) {
-                "Penelitian" -> PenelitianContent(researches)
-                "Pengabdian" -> PengabdianContent(devotions)
-                "Pengajaran" -> PengajaranContent(teachings)
+                "Penelitian" -> PenelitianContent(researches, "menumember", navController)
+                "Pengabdian" -> PengabdianContent(devotions, "menumember", navController)
+                "Pengajaran" -> PengajaranContent(teachings, "menumember", navController)
             }
 
             Box(

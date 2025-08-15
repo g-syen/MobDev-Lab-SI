@@ -2,7 +2,9 @@ package com.example.studentemployee.features.members.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -144,7 +146,9 @@ fun AddEditMemberScreen(
         containerColor = Color(0xFFF9F9F9)
     ) { innerPadding ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp),
+            modifier = Modifier.fillMaxSize().padding(innerPadding).imePadding().verticalScroll(
+                rememberScrollState()
+            ).padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
             if (!isLoaded) {

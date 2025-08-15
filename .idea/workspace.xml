@@ -10,18 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="961661eb-ddd1-441a-8fd7-622d9f14c713" name="Changes" comment="Update .gitignore to exclude unnecessary files">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/StudentEmployeeViewModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/model/StudentEmployees.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/AddEditAnggotaScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/AddEditDivisiScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/AddEditKelompokScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/AddEditStudentEmployee.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/DivisiAdminScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/DivisiScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/KelompokAdminScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/KelompokScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/viewmodel/SearchViewModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/checksums/md5-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock" afterDir="false" />
@@ -31,23 +21,23 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_16_2025_3_05_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_16_2025_3_05_PM__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/MainActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/core/components/Cards.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/core/components/Cards.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/core/database/AppDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/core/database/AppDatabase.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/content/ContentViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/content/ContentViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/content/ui/ContentScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/content/ui/ContentScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/homepage/ui/HomepageAdminScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/homepage/ui/HomepageAdminScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/homepage/ui/HomepageMemberScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/homepage/ui/HomepageMemberScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/MemberViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/MemberViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/MemberAdminScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/MemberAdminScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/MemberScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/MemberScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/StatisticsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/statistics/ui/StatisticsScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/repository/FirestoreRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/repository/FirestoreRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/content/ContentViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/publication/PublicationViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/content/ui/ContentScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/publication/ui/PublicationScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/devotion/ui/AddEditDevotionScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/devotion/ui/AddEditDevotionScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/events/ui/AddEditEventScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/events/ui/AddEditEventScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/AddEditAnggotaScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/AddEditAnggotaScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/AddEditMemberScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/members/ui/AddEditMemberScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/menu/ui/MenuAdminScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/dashboard/ui/DashboardAdminScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/menu/ui/MenuMemberScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/dashboard/ui/DashboardMemberScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/news/ui/AddEditNewsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/news/ui/AddEditNewsScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/profile/ui/ProfileScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/profile/ui/ProfileScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/research/ui/AddEditResearchScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/research/ui/AddEditResearchScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/statistics/ui/StatisticsScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/statistics/ui/StatisticsScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/teaching/ui/AddEditTeachingScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/studentemployee/features/teaching/ui/AddEditTeachingScreen.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +47,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\ASUS\.android\avd\Medium_Phone_API_35.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -111,6 +101,9 @@
     &quot;accountId&quot;: &quot;3d314def-47bc-4ca1-9c7e-2ea2291810d6&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -140,7 +133,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
@@ -316,12 +309,12 @@
       <map>
         <entry key="com.example.studentemployee">
           <value>
-            <CheckInfo lastCheckTimestamp="1741845050358" />
+            <CheckInfo lastCheckTimestamp="1755244797902" />
           </value>
         </entry>
         <entry key="com.example.studentemployee.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1741845050367" />
+            <CheckInfo lastCheckTimestamp="1755244797900" />
           </value>
         </entry>
       </map>

@@ -11,10 +11,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -80,6 +83,7 @@ fun AddEditDevotionScreen(
     var titleError by remember { mutableStateOf(false) }
     var contributorsError by remember { mutableStateOf(false) }
     var urlError by remember { mutableStateOf(false) }
+    var urlInvalid by remember { mutableStateOf(false) }
 
     LaunchedEffect(selectedDevotion) {
         selectedDevotion?.let {
@@ -148,6 +152,7 @@ fun AddEditDevotionScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
+                .imePadding()
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -156,6 +161,8 @@ fun AddEditDevotionScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .imePadding()
+                        .verticalScroll(rememberScrollState())
 
                 ) {
                     Text(
@@ -195,13 +202,23 @@ fun AddEditDevotionScreen(
                         text = if (isEdit) "Edit Pengabdian" else "Simpan Pengabdian",
                         onClick = {titleError = devotionTitle.isBlank()
                             contributorsError = devotionContributors.isBlank()
-                            urlError = devotionUrl.isBlank() || !isValidUrl(devotionUrl)
+                            urlError = devotionUrl.isBlank()
+                            urlInvalid = !isValidUrl(devotionUrl)
+
 
                             if (userId != null) {
                                 if (titleError || contributorsError || urlError) {
                                     Toast.makeText(
                                         context,
                                         "Mohon lengkapi semua field dengan benar.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return@CustomButton
+                                }
+                                if (urlInvalid) {
+                                    Toast.makeText(
+                                        context,
+                                        "Mohon mulai link pengabdian dengan \"http\" atau \"https\"",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     return@CustomButton
@@ -272,7 +289,7 @@ fun AddEditDevotionScreen(
                 fontWeight = FontWeight.Bold,
                 color = Color(0XFFF37619)
             )
-            LazyColumn(modifier = modifier.padding(horizontal = 24.dp)) {
+            LazyColumn(modifier = modifier.imePadding().padding(horizontal = 24.dp)) {
                 items(userDevotions) { devotion ->
                     DevotionCard(
                         devotion = devotion,
