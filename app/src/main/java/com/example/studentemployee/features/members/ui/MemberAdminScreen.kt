@@ -186,7 +186,7 @@ fun MemberAdminScreen(
                             },
                             onClickDelete = { user ->
                                 memberViewModel.deleteMember(user, firestore = FirebaseFirestore.getInstance(), auth = FirebaseAuth.getInstance())
-                                Toast.makeText(context, "Delete action triggered for ${user.nama}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Member lab ${user.nama} berhasil dihapus.", Toast.LENGTH_SHORT).show()
                             }
                         )
                     }
@@ -270,8 +270,8 @@ fun ListStudentEmployeeAdmin(
             onDelete = { id ->
                 viewModel.deleteStudentEmployee(
                     id = id,
-                    onSuccess = { Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show() },
-                    onFailure = { eMsg -> Toast.makeText(context, "Error deleting: $eMsg", Toast.LENGTH_LONG).show() }
+                    onSuccess = { Toast.makeText(context, "Berhasil dihapus.", Toast.LENGTH_SHORT).show() },
+                    onFailure = { eMsg -> Toast.makeText(context, "Error menghapus: $eMsg", Toast.LENGTH_LONG).show() }
                 )
             },
             navController = navController

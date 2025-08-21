@@ -68,6 +68,13 @@ fun AddEditMemberScreen(
         if (!isEdit) {
             auth.createUserWithEmailAndPassword(email, UUID.randomUUID().toString())
                 .addOnSuccessListener { authResult ->
+                    auth.sendPasswordResetEmail(email)
+                        .addOnSuccessListener {
+                            Log.e("Password Reset Link", "Sending password link to member Successful")
+                        }
+                        .addOnFailureListener {
+                            Log.e("Password Reset Link", "Error sending reset password link to member", it)
+                        }
                     val uid = authResult.user?.uid ?: return@addOnSuccessListener
                     val newMember = mapOf(
                         "nama" to name,
@@ -103,6 +110,7 @@ fun AddEditMemberScreen(
                             Log.d("Firestore", "Member added")
                             navController.popBackStack()
                         }
+
                 }
                 .addOnFailureListener {
                     Log.e("Auth", "Error creating user", it)
